@@ -611,48 +611,6 @@ function ClubesSection({ clubs, onSaveClub, onDeleteClub }) {
           Agregar club
         </button>
       </div>
-      {isFormVisible && (
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-          <form onSubmit={handleSave} className="grid gap-3 lg:grid-cols-2">
-            {[
-              { label: "Nombre", name: "nombre" },
-              { label: "Presidente", name: "presidente" },
-              { label: "Tesorero", name: "tesorero" },
-              { label: "Secretario", name: "secretario" },
-              { label: "Email", name: "email", type: "email" },
-              { label: "Logo URL", name: "logoUrl", placeholder: "https://..." },
-            ].map((field) => (
-              <label key={field.name} className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                {field.label}
-                <input
-                  value={form[field.name] || ""}
-                  type={field.type || "text"}
-                  placeholder={field.placeholder || ""}
-                  onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
-                  className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-                />
-              </label>
-            ))}
-            <div className="lg:col-span-2">
-              <p className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">Divisiones</p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900">
-                {ALL_DIVISIONES.map((division) => (
-                  <label key={division} className="flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300">
-                    <input
-                      type="checkbox"
-                      checked={form.divisiones.includes(division)}
-                      onChange={(e) => {
-                        const next = e.target.checked
-                          ? [...form.divisiones, division]
-                          : form.divisiones.filter((item) => item !== division);
-                        setForm({ ...form, divisiones: next });
-                      }}
-                      className="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 dark:border-slate-600"
-                    />
-                    {division}
-                  </label>
-                ))}
-              </div>
       <Modal isOpen={isFormVisible} onClose={() => { setIsFormVisible(false); setEditingClub(null); }} title={editingClub ? "Editar Club" : "Agregar Club"}>
         <form onSubmit={handleSave} className="grid gap-3 lg:grid-cols-2">
           {[
@@ -694,24 +652,6 @@ function ClubesSection({ clubs, onSaveClub, onDeleteClub }) {
                 </label>
               ))}
             </div>
-            <div className="lg:col-span-2 flex flex-wrap gap-3 justify-end pt-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsFormVisible(false);
-                  setEditingClub(null);
-                }}
-                className="rounded-xl bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-              >
-                Cancelar
-              </button>
-              <button className="rounded-xl bg-sky-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">
-                {editingClub ? "Guardar" : "Agregar"}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
           </div>
           <div className="lg:col-span-2 flex flex-wrap gap-3 justify-end pt-3">
             <button
@@ -727,7 +667,7 @@ function ClubesSection({ clubs, onSaveClub, onDeleteClub }) {
           </div>
         </form>
       </Modal>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
         {clubs.map((club) => (
           <div key={club.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-2xl font-semibold text-slate-700 overflow-hidden dark:bg-slate-800 dark:text-slate-100">
@@ -859,31 +799,6 @@ function JugadoresSection({ clubs, players, onSavePlayer, onDeletePlayer }) {
           Agregar Jugador
         </button>
       </div>
-      {isFormVisible && (
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-          <form onSubmit={handleSave} className="grid gap-3 lg:grid-cols-2">
-            {[
-              { label: "Nombres", name: "nombres" },
-              { label: "Apellidos", name: "apellidos" },
-              { label: "Cédula", name: "cedula" },
-              { label: "Fecha Nacimiento", name: "fechaNac", type: "text", placeholder: "DD-MM-AAAA" },
-            ].map((field) => (
-              <label key={field.name} className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                {field.label}
-                <input
-                  value={form[field.name] || ""}
-                  type={field.type || "text"}
-                  placeholder={field.placeholder || ""}
-                  onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
-                  className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-                />
-              </label>
-            ))}
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Club
-              <select
-                value={form.club}
-                onChange={(e) => setForm({ ...form, club: e.target.value })}
       <Modal isOpen={isFormVisible} onClose={() => { setIsFormVisible(false); setEditingPlayer(null); }} title={editingPlayer ? "Editar Jugador" : "Agregar Jugador"}>
         <form onSubmit={handleSave} className="grid gap-3 lg:grid-cols-2">
           {[
@@ -900,19 +815,8 @@ function JugadoresSection({ clubs, players, onSavePlayer, onDeletePlayer }) {
                 placeholder={field.placeholder || ""}
                 onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
                 className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-              >
-                <option value="">Seleccionar club...</option>
-                {clubs.map((club) => (
-                  <option key={club.id} value={club.nombre}>{club.nombre}</option>
-                ))}
-              </select>
               />
             </label>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              División
-              <select
-                value={form.division}
-                onChange={(e) => setForm({ ...form, division: e.target.value })}
           ))}
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
             Club
@@ -952,56 +856,8 @@ function JugadoresSection({ clubs, players, onSavePlayer, onDeletePlayer }) {
                 placeholder={field.placeholder}
                 onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
                 className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-              >
-                <option value="">Seleccionar división...</option>
-                {ALL_DIVISIONES.map((division) => (
-                  <option key={division} value={division}>{division}</option>
-                ))}
-              </select>
               />
             </label>
-            {[
-              { label: "Fecha Oficio Asociación", name: "fechaOficio", placeholder: "DD-MM-AAAA" },
-              { label: "Fecha Ingreso Club", name: "fechaIngreso", placeholder: "DD-MM-AAAA" },
-            ].map((field) => (
-              <label key={field.name} className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                {field.label}
-                <input
-                  value={form[field.name] || ""}
-                  type="text"
-                  placeholder={field.placeholder}
-                  onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
-                  className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-                />
-              </label>
-            ))}
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 lg:col-span-2">
-              Estado
-              <select
-                value={form.estado}
-                onChange={(e) => setForm({ ...form, estado: e.target.value })}
-                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-              >
-                {["Activo", "Inactivo", "Rechazado"].map((estado) => (
-                  <option key={estado} value={estado}>{estado}</option>
-                ))}
-              </select>
-            </label>
-            <div className="lg:col-span-2 flex flex-wrap gap-3 justify-end pt-3">
-              <button
-                type="button"
-                onClick={() => setIsFormVisible(false)}
-                className="rounded-xl bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-              >
-                Cancelar
-              </button>
-              <button className="rounded-xl bg-sky-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">
-                {editingPlayer ? "Guardar cambios" : "Agregar jugador"}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
           ))}
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 lg:col-span-2">
             Estado
@@ -1201,7 +1057,6 @@ function PartidoForm({ clubs, match, onCancel, onSave, isLiguilla }) {
         {match ? `Editar partido${isLiguilla ? " de liguilla" : ""}` : `Programar partido${isLiguilla ? " de liguilla" : ""}`}
       </h3>
       <form
-    <form
         onSubmit={(e) => {
           e.preventDefault();
           onSave({
@@ -1335,25 +1190,14 @@ function CampeonatoSection({ clubs, matches, onSaveMatch, onDeleteMatch, onRegis
           </button>
         </div>
       </div>
-      {formOpen && (
       <Modal isOpen={formOpen} onClose={() => { setFormOpen(false); setEditingMatch(null); }} title={editingMatch ? "Editar Partido" : "Programar Partido"}>
         <PartidoForm
           clubs={clubs}
           match={editingMatch}
-          onCancel={() => {
-            setFormOpen(false);
-            setEditingMatch(null);
-          }}
-          onSave={(match) => {
-            onSaveMatch(match);
-            setFormOpen(false);
-            setEditingMatch(null);
-          }}
           onCancel={() => { setFormOpen(false); setEditingMatch(null); }}
           onSave={(m) => { onSaveMatch(m); setFormOpen(false); setEditingMatch(null); }}
           isLiguilla={false}
         />
-      )}
       </Modal>
       <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <table className="min-w-full text-left text-[13px] text-slate-700 dark:text-slate-300">
@@ -1581,25 +1425,14 @@ function PartidosLiguillaSection({ clubs, matches, activeDivision, onSaveMatch, 
           </button>
         ))}
       </div>
-      {formOpen && (
       <Modal isOpen={formOpen} onClose={() => { setFormOpen(false); setEditingMatch(null); }} title={editingMatch ? "Editar Partido Liguilla" : "Programar Partido Liguilla"}>
         <PartidoForm
           clubs={clubs}
           match={editingMatch}
-          onCancel={() => {
-            setFormOpen(false);
-            setEditingMatch(null);
-          }}
-          onSave={(match) => {
-            onSaveMatch(match);
-            setFormOpen(false);
-            setEditingMatch(null);
-          }}
           onCancel={() => { setFormOpen(false); setEditingMatch(null); }}
           onSave={(m) => { onSaveMatch(m); setFormOpen(false); setEditingMatch(null); }}
           isLiguilla
         />
-      )}
       </Modal>
       <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <table className="min-w-full text-left text-[13px] text-slate-700 dark:text-slate-300">
@@ -1919,47 +1752,6 @@ function SuspensionesSection({ players, suspensions, clubs, onSaveSuspension, on
           </select>
         </div>
       </div>
-      {formVisible && (
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-          <form onSubmit={handleSave} className="grid gap-3 lg:grid-cols-2">
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Jugador
-              <input
-                value={form.playerName}
-                onChange={(e) => setForm({ ...form, playerName: e.target.value, playerId: "" })}
-                placeholder="Buscar nombre o cédula"
-                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-              />
-              {suggestions.length > 0 && (
-                <div className="suggestions-list">
-                  {suggestions.slice(0, 5).map((player) => (
-                    <div
-                      key={player.id}
-                      className="suggestion-item"
-                      onMouseDown={() => setForm({
-                        ...form,
-                        playerId: player.id,
-                        playerName: `${player.nombres} ${player.apellidos}`,
-                        clubName: player.club,
-                        division: player.division,
-                      })}
-                    >
-                      {player.nombres} {player.apellidos} ({player.cedula})
-                    </div>
-                  ))}
-                </div>
-              )}
-            </label>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              División
-              <select
-                value={form.division}
-                onChange={(e) => setForm({ ...form, division: e.target.value })}
-                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-              >
-                <option value="">Seleccionar división</option>
-                {ALL_DIVISIONES.map((division) => (
-                  <option key={division} value={division}>{division}</option>
       <Modal isOpen={formVisible} onClose={() => { setFormVisible(false); setEditingSuspension(null); }} title={editingSuspension ? "Editar Suspensión" : "Nueva Suspensión"}>
         <form onSubmit={handleSave} className="grid gap-3 lg:grid-cols-2">
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -1987,8 +1779,6 @@ function SuspensionesSection({ players, suspensions, clubs, onSaveSuspension, on
                     {player.nombres} {player.apellidos} ({player.cedula})
                   </div>
                 ))}
-              </select>
-            </label>
               </div>
             )}
           </label>
@@ -2028,12 +1818,8 @@ function SuspensionesSection({ players, suspensions, clubs, onSaveSuspension, on
           </label>
           {form.tipo === "fechas" ? (
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Fecha inicio
               Nº fechas
               <input
-                value={form.fechaInicio}
-                onChange={(e) => setForm({ ...form, fechaInicio: e.target.value })}
-                placeholder="DD-MM-AAAA"
                 type="number"
                 min="1"
                 value={form.duracionFechas}
@@ -2041,80 +1827,18 @@ function SuspensionesSection({ players, suspensions, clubs, onSaveSuspension, on
                 className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
               />
             </label>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Tipo
-              <select
-                value={form.tipo}
-                onChange={(e) => setForm({ ...form, tipo: e.target.value })}
-                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-              >
-                {SUSPENSION_TYPES.map((type) => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
-              </select>
-            </label>
-            {form.tipo === "fechas" ? (
           ) : (
             <div className="grid gap-4 lg:grid-cols-2">
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                Nº fechas
                 Duración
                 <input
                   type="number"
                   min="1"
-                  value={form.duracionFechas}
-                  onChange={(e) => setForm({ ...form, duracionFechas: e.target.value })}
                   value={form.duracionTiempoValor}
                   onChange={(e) => setForm({ ...form, duracionTiempoValor: e.target.value })}
                   className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                 />
               </label>
-            ) : (
-              <div className="grid gap-4 lg:grid-cols-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Duración
-                  <input
-                    type="number"
-                    min="1"
-                    value={form.duracionTiempoValor}
-                    onChange={(e) => setForm({ ...form, duracionTiempoValor: e.target.value })}
-                    className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-                  />
-                </label>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Unidad
-                  <select
-                    value={form.duracionTiempoUnidad}
-                    onChange={(e) => setForm({ ...form, duracionTiempoUnidad: e.target.value })}
-                    className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-                  >
-                    {TIEMPO_UNITS.map((unit) => (
-                      <option key={unit} value={unit}>{unit}</option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-            )}
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 lg:col-span-2">
-              Motivo
-              <textarea
-                rows="3"
-                value={form.motivo}
-                onChange={(e) => setForm({ ...form, motivo: e.target.value })}
-                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-              />
-            </label>
-            <div className="lg:col-span-2 flex flex-wrap gap-3 justify-end pt-3">
-              <button
-                type="button"
-                onClick={() => setFormVisible(false)}
-                className="rounded-2xl bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-              >
-                Cancelar
-              </button>
-              <button className="rounded-xl bg-sky-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">
-                Guardar
-              </button>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                 Unidad
                 <select
@@ -2128,9 +1852,6 @@ function SuspensionesSection({ players, suspensions, clubs, onSaveSuspension, on
                 </select>
               </label>
             </div>
-          </form>
-        </div>
-      )}
           )}
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 lg:col-span-2">
             Motivo
@@ -2302,48 +2023,6 @@ function AdminUsuariosSection({ users, onSaveUser, onDeleteUser }) {
           Nuevo usuario
         </button>
       </div>
-      {formVisible && (
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-          <form onSubmit={handleSave} className="grid gap-3 lg:grid-cols-2">
-            {[
-              { label: "Nombre", name: "nombre" },
-              { label: "Cédula", name: "cedula", disabled: !!editingUser },
-            ].map((field) => (
-              <label key={field.name} className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                {field.label}
-                <input
-                  value={form[field.name] || ""}
-                  type="text"
-                  disabled={field.disabled}
-                  onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
-                  className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 disabled:cursor-not-allowed disabled:opacity-70"
-                />
-              </label>
-            ))}
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Contraseña
-              <div className="relative mt-2">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 pr-12 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-500 dark:text-slate-400"
-                >
-                  {showPassword ? "Ocultar" : "Ver"}
-                </button>
-              </div>
-            </label>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Rol
-              <select
-                value={form.rol}
-                onChange={(e) => setForm({ ...form, rol: e.target.value })}
-                disabled={editingUser?.id === MASTER_ADMIN_ID}
       <Modal isOpen={formVisible} onClose={() => { setFormVisible(false); setEditingUser(null); }} title={editingUser ? "Editar Usuario" : "Nuevo Usuario"}>
         <form onSubmit={handleSave} className="grid gap-3 lg:grid-cols-2">
           {[
@@ -2358,16 +2037,8 @@ function AdminUsuariosSection({ users, onSaveUser, onDeleteUser }) {
                 disabled={field.disabled}
                 onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
                 className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {editingUser?.id === MASTER_ADMIN_ID ? (
-                  <option value="Maestro">Maestro</option>
-                ) : (
-                  USER_ROLES.map((rol) => <option key={rol} value={rol}>{rol}</option>)
-                )}
-              </select>
               />
             </label>
-            <div className="lg:col-span-2 flex flex-wrap gap-3 justify-end pt-3">
           ))}
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
             Contraseña
@@ -2380,24 +2051,12 @@ function AdminUsuariosSection({ users, onSaveUser, onDeleteUser }) {
               />
               <button
                 type="button"
-                onClick={() => {
-                  setFormVisible(false);
-                  setEditingUser(null);
-                }}
-                className="rounded-xl bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-500 dark:text-slate-400"
               >
-                Cancelar
                 {showPassword ? "Ocultar" : "Ver"}
               </button>
-              <button className="rounded-xl bg-sky-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">
-                Guardar usuario
-              </button>
             </div>
-          </form>
-        </div>
-      )}
           </label>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
             Rol
