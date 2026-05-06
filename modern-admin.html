@@ -1,0 +1,2476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrador de Asociación de Fútbol - Moderno</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <style>
+    .sidebar-link.active {
+      background-color: #e0f2fe;
+      color: #0c4a6e;
+      font-weight: 600;
+    }
+    html.dark .sidebar-link.active {
+      background-color: #384252;
+      color: #e2e8f0;
+    }
+    .sidebar-link-label {
+      transition: opacity 0.1s ease-in-out, width 0.1s ease-in-out, margin-left 0.1s ease-in-out;
+      white-space: nowrap;
+    }
+    .sidebar-collapsed .sidebar-link-label {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      margin-left: 0 !important;
+    }
+    .sidebar-collapsed .sidebar-link svg {
+      margin-right: 0 !important;
+    }
+    .sidebar-collapsed nav.px-4 {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+    .sidebar-collapsed .sidebar-link {
+      justify-content: center;
+    }
+    .sidebar-collapsed div.px-4.py-4.border-t {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+    .sidebar-header-logo-container {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    .sidebar-collapsed .sidebar-header-logo-container {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+    .sidebar-expanded .sidebar-header-logo-container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .division-tag {
+      padding: 0.25rem 0.5rem;
+      margin: 0.125rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: inline-block;
+    }
+    .status-active,
+    .status-completado {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: 9999px;
+      color: #059669;
+      background-color: #d1fae5;
+    }
+    html.dark .status-active,
+    html.dark .status-completado {
+      color: #6ee7b7;
+      background-color: #064e3b;
+    }
+    .status-inactive,
+    .status-rechazado,
+    .status-cumplida {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: 9999px;
+      color: #71717a;
+      background-color: #e4e4e7;
+    }
+    html.dark .status-inactive,
+    html.dark .status-rechazado,
+    html.dark .status-cumplida {
+      color: #a1a1aa;
+      background-color: #3f3f46;
+    }
+    .status-pending,
+    .status-activa {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: 9999px;
+      color: #f59e0b;
+      background-color: #fef3c7;
+    }
+    html.dark .status-pending,
+    html.dark .status-activa {
+      color: #fbbf24;
+      background-color: #713f12;
+    }
+    .result-input {
+      width: 40px;
+      text-align: center;
+      border: 1px solid #d1d5db;
+      border-radius: 0.25rem;
+      padding: 0.25rem;
+    }
+    html.dark .result-input {
+      background-color: #334155;
+      border-color: #475569;
+      color: #e2e8f0;
+    }
+    .input-with-icon {
+      position: relative;
+    }
+    .input-with-icon svg.input-icon-svg {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+    html.dark .input-with-icon svg.input-icon-svg {
+      color: #64748b;
+    }
+    .division-checkbox label {
+      display: flex;
+      align-items: center;
+      padding: 0.25rem 0;
+    }
+    .division-checkbox input[type="checkbox"] {
+      margin-right: 0.5rem;
+      height: 1rem;
+      width: 1rem;
+      border-radius: 0.25rem;
+      border-color: #9ca3af;
+    }
+    html.dark .division-checkbox input[type="checkbox"] {
+      border-color: #64748b;
+    }
+    .division-checkbox input[type="checkbox"]:checked {
+      background-color: #2563eb;
+      border-color: #2563eb;
+    }
+    html.dark .division-checkbox input[type="checkbox"]:checked {
+      background-color: #3b82f6;
+      border-color: #3b82f6;
+    }
+    .division-checkbox span {
+      font-size: 0.875rem;
+      color: #374151;
+    }
+    html.dark .division-checkbox span {
+      color: #cbd5e1;
+    }
+    .suggestions-list {
+      position: absolute;
+      background-color: white;
+      border: 1px solid #d1d5db;
+      border-top: none;
+      max-height: 150px;
+      overflow-y: auto;
+      width: calc(100% - 2px);
+      z-index: 50;
+      border-radius: 0 0 0.375rem 0.375rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    html.dark .suggestions-list {
+      background-color: #1e293b;
+      border-color: #334155;
+    }
+    .suggestion-item {
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    .suggestion-item:hover {
+      background-color: #f3f4f6;
+    }
+    html.dark .suggestion-item:hover {
+      background-color: #334155;
+    }
+    .form-error {
+      font-size: 0.75rem;
+      color: #ef4444;
+      margin-top: 0.25rem;
+    }
+    #sidebar-container {
+      transition: width 0.3s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-slate-900 font-sans text-gray-900 dark:text-slate-300">
+  <div id="root"></div>
+  <script type="text/javascript">
+    const { useState, useEffect, useMemo } = React;
+
+    const ALL_DIVISIONES = [
+      "cuarta infantil",
+      "tercera infantil",
+      "segunda infantil",
+      "primera infantil",
+      "tercera adulto",
+      "segunda adulto",
+      "primera adulto",
+      "senior",
+      "super senior",
+      "viejos tercios",
+      "division femenina",
+    ];
+    const LIGUILLA_GROUPS = ["A", "B"];
+    const SUSPENSION_TYPES = ["fechas", "tiempo"];
+    const TIEMPO_UNITS = ["días", "semanas", "meses", "años"];
+    const USER_ROLES = ["Administrador", "Usuario"];
+    const MASTER_ADMIN_ID = "16776631-5";
+
+    const INITIAL_CLUBS = [
+      { id: 1, nombre: "Alejandro Navarrete", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+      { id: 2, nombre: "Estrella del Janequeo", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+      { id: 3, nombre: "Botafogo", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+      { id: 4, nombre: "Real Chile", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+      { id: 5, nombre: "Victoria de Chile", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+      { id: 6, nombre: "Flecha Verde", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+      { id: 7, nombre: "Juan Carlos Peña", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+      { id: 8, nombre: "Quinto Sector", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+      { id: 9, nombre: "Tres Estrellas", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+      { id: 10, nombre: "Atlantic Reefer", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+      { id: 11, nombre: "Reñaca Bajo", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+      { id: 12, nombre: "Corporacion Everton", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES },
+    ];
+
+    const INITIAL_PLAYERS = [
+      {
+        id: "12345678-9",
+        nombres: "Carlos",
+        apellidos: "Rodriguez",
+        cedula: "12345678-9",
+        club: "Alejandro Navarrete",
+        division: "cuarta infantil",
+        fechaNac: "1995-05-15",
+        fechaOficio: "2025-01-15",
+        fechaIngreso: "2025-01-20",
+        estado: "Activo",
+      },
+      {
+        id: "98765432-1",
+        nombres: "Diego",
+        apellidos: "Sanchez",
+        cedula: "98765432-1",
+        club: "Estrella del Janequeo",
+        division: "tercera infantil",
+        fechaNac: "1998-03-22",
+        fechaOficio: "2025-02-01",
+        fechaIngreso: "2025-02-05",
+        estado: "Activo",
+      },
+      {
+        id: "11223344-5",
+        nombres: "Ana",
+        apellidos: "Gomez",
+        cedula: "11223344-5",
+        club: "Botafogo",
+        division: "primera adulto",
+        fechaNac: "1990-11-10",
+        fechaOficio: "2025-01-10",
+        fechaIngreso: "2025-01-15",
+        estado: "Activo",
+      },
+      {
+        id: "55667788-9",
+        nombres: "Luis",
+        apellidos: "Perez",
+        cedula: "55667788-9",
+        club: "Alejandro Navarrete",
+        division: "senior",
+        fechaNac: "1980-01-01",
+        fechaOficio: "2025-03-01",
+        fechaIngreso: "2025-03-02",
+        estado: "Activo",
+      },
+    ];
+
+    const INITIAL_MATCHES = [
+      {
+        id: 1714316160000,
+        fecha: "2025-04-29",
+        hora: "19:30",
+        local: "Botafogo",
+        visitante: "Reñaca Bajo",
+        division: "cuarta infantil",
+        resultado: "1-1",
+        estado: "Finalizado",
+      },
+      {
+        id: 1714316160001,
+        fecha: "2025-04-30",
+        hora: "15:00",
+        local: "Alejandro Navarrete",
+        visitante: "Tres Estrellas",
+        division: "senior",
+        resultado: "2-1",
+        estado: "Finalizado",
+      },
+      {
+        id: 1714402560000,
+        fecha: "2025-05-01",
+        hora: "10:00",
+        local: "Victoria de Chile",
+        visitante: "Flecha Verde",
+        division: "tercera adulto",
+        resultado: "0-3",
+        estado: "Finalizado",
+      },
+      {
+        id: 1714488960000,
+        fecha: "2025-05-01",
+        hora: "11:30",
+        local: "Alejandro Navarrete",
+        visitante: "Botafogo",
+        division: "segunda infantil",
+        resultado: "",
+        estado: "Pendiente",
+      },
+      {
+        id: 1714575360000,
+        fecha: "2025-05-02",
+        hora: "16:00",
+        local: "Real Chile",
+        visitante: "Quinto Sector",
+        division: "cuarta infantil",
+        resultado: "",
+        estado: "Pendiente",
+      },
+      {
+        id: 1714575360001,
+        fecha: "2025-05-02",
+        hora: "17:30",
+        local: "Estrella del Janequeo",
+        visitante: "Corporacion Everton",
+        division: "senior",
+        resultado: "3-3",
+        estado: "Finalizado",
+      },
+    ];
+
+    const INITIAL_LIGUILLA_MATCHES = [
+      {
+        id: 2000000000001,
+        fecha: "2025-04-27",
+        hora: "14:30",
+        local: "Alejandro Navarrete",
+        visitante: "Botafogo",
+        division: "segunda infantil",
+        resultado: "3-1",
+        estado: "Completado",
+        grupo: "A",
+      },
+      {
+        id: 2000000000002,
+        fecha: "2025-04-28",
+        hora: "11:10",
+        local: "Atlantic Reefer",
+        visitante: "Flecha Verde",
+        division: "segunda infantil",
+        resultado: "1-0",
+        estado: "Completado",
+        grupo: "A",
+      },
+      {
+        id: 2000000000003,
+        fecha: "2025-05-04",
+        hora: "10:00",
+        local: "Real Chile",
+        visitante: "Estrella del Janequeo",
+        division: "senior",
+        resultado: "2-2",
+        estado: "Completado",
+        grupo: "B",
+      },
+      {
+        id: 2000000000004,
+        fecha: "2025-05-04",
+        hora: "12:00",
+        local: "Victoria de Chile",
+        visitante: "Juan Carlos Peña",
+        division: "senior",
+        resultado: "1-0",
+        estado: "Completado",
+        grupo: "B",
+      },
+      {
+        id: 2000000000005,
+        fecha: "2025-05-05",
+        hora: "15:00",
+        local: "Botafogo",
+        visitante: "Atlantic Reefer",
+        division: "segunda infantil",
+        resultado: "",
+        estado: "Pendiente",
+        grupo: "A",
+      },
+    ];
+
+    const INITIAL_SUSPENSIONS = [
+      {
+        id: 1,
+        playerId: "12345678-9",
+        playerName: "Carlos Rodriguez",
+        clubName: "Alejandro Navarrete",
+        division: "cuarta infantil",
+        fechaInicio: "2025-04-29",
+        tipo: "fechas",
+        duracionFechas: 4,
+        partidosCumplidos: 1,
+        motivo: "Tarjeta Roja Directa",
+        estado: "Activa",
+      },
+      {
+        id: 2,
+        playerId: "11223344-5",
+        playerName: "Ana Gomez",
+        clubName: "Botafogo",
+        division: "primera adulto",
+        fechaInicio: "2025-04-15",
+        tipo: "tiempo",
+        duracionTiempo: { valor: 2, unidad: "meses" },
+        fechaTerminoCalculada: "2025-06-15",
+        motivo: "Acumulación Tarjetas Amarillas",
+        estado: "Activa",
+      },
+    ];
+
+    const INITIAL_USERS = [
+      { id: MASTER_ADMIN_ID, nombre: "Admin Maestro", cedula: MASTER_ADMIN_ID, rol: "Maestro", password: "123" },
+      { id: "11111111-1", nombre: "Juan Perez", cedula: "11111111-1", rol: "Administrador", password: "password123" },
+      { id: "22222222-2", nombre: "Maria Soto", cedula: "22222222-2", rol: "Usuario", password: "password456", permissions: ["inicio-section", "tablas-section"] },
+    ];
+
+    const INITIAL_ASSOCIATION_DETAILS = {
+      nombre: "Asociación de Fútbol Luis Gómez Carreño",
+      logoUrl: "https://i.postimg.cc/1RTSvmQb/ASOC-FUTBOL.png",
+      presidente: "Juan Pérez González",
+      secretario: "Maria Rodríguez Soto",
+      tesorero: "Carlos López Silva",
+      director1: "Ana Contreras Vargas",
+      director2: "Luis Torres Castro",
+      director3: "Sofía Herrera Muñoz",
+      email: "asociacion.lgc@example.com",
+    };
+
+    function formatDateForDisplay(dateString) {
+      if (!dateString) return "";
+      const parts = dateString.split("-");
+      if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      return dateString;
+    }
+
+    function formatDateForInput(value) {
+      if (!value) return "";
+      if (value.includes("/")) {
+        const [d, m, y] = value.split("/");
+        return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+      }
+      if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+      if (/^\d{2}-\d{2}-\d{4}$/.test(value)) {
+        const [d, m, y] = value.split("-");
+        return `${y}-${m}-${d}`;
+      }
+      return value;
+    }
+
+    function formatDateToDDMMYYYY(value) {
+      if (!value) return "";
+      if (value.includes("-")) {
+        const [y, m, d] = value.split("-");
+        return `${d}-${m}-${y}`;
+      }
+      return value;
+    }
+
+    function isValidDateDDMMYYYY(value) {
+      if (!/^\d{2}-\d{2}-\d{4}$/.test(value)) return false;
+      const [d, m, y] = value.split("-").map(Number);
+      if (y < 1900 || y > 2100 || m < 1 || m > 12) return false;
+      const monthLength = [31, 28 + (y % 400 === 0 || (y % 100 !== 0 && y % 4 === 0) ? 1 : 0), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      return d > 0 && d <= monthLength[m - 1];
+    }
+
+    function calculateEndDate(startDate, duration, unit) {
+      if (!startDate || !duration || !unit) return undefined;
+      const [y, m, d] = startDate.split("-").map(Number);
+      const date = new Date(Date.UTC(y, m - 1, d));
+      if (isNaN(date)) return undefined;
+      switch (unit) {
+        case "días":
+          date.setUTCDate(date.getUTCDate() + duration);
+          break;
+        case "semanas":
+          date.setUTCDate(date.getUTCDate() + duration * 7);
+          break;
+        case "meses":
+          date.setUTCMonth(date.getUTCMonth() + duration);
+          break;
+        case "años":
+          date.setUTCFullYear(date.getUTCFullYear() + duration);
+          break;
+        default:
+          break;
+      }
+      return date.toISOString().split("T")[0];
+    }
+
+    const Icon = {
+      Home: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M2.25 12l8.954-8.955a.75.75 0 011.06 0l8.955 8.955M3.75 10.5V21a.75.75 0 00.75.75H9v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21h4.5a.75.75 0 00.75-.75V10.5M8.25 21h7.5" })
+        )
+      ),
+      Library: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" })
+        )
+      ),
+      Document: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" })
+        )
+      ),
+      Users: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" })
+        )
+      ),
+      Trophy: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-4.5A3.375 3.375 0 0012.75 9.75H11.25A3.375 3.375 0 007.5 13.125V18.75m9 0h1.5M4.5 18.75h1.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" })
+        )
+      ),
+      Table: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25A2.25 2.25 0 0113.5 8.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" })
+        )
+      ),
+      Calendar: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-3.75h.008v.008H12v-.008z" })
+        )
+      ),
+      List: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M8.25 6.75h7.5M8.25 12h7.5m-7.5 5.25h7.5M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 17.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" })
+        )
+      ),
+      Cog: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.43.992a6.759 6.759 0 010 1.255c-.008.378.137.75.43.99l1.004.828c.421.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-1.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" }),
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z" })
+        )
+      ),
+      Ban: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" })
+        )
+      ),
+      Arrow: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" })
+        )
+      ),
+      UserCog: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" }),
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M21.75 12c0 .392-.024.78-.07 1.153M12 18.75c-1.32.263-2.696.396-4.09.396C4.782 19.146 3 17.364 3 15c0-1.39.138-2.722.39-4.01M12 18.75c.623 0 1.229-.038 1.818-.105M12.75 6.75h.008v.008H12.75V6.75zm-.011 3.022h.012a.75.75 0 010 1.5H12.75a.75.75 0 010-1.5zm.011 3.022h.012a.75.75 0 010 1.5H12.75a.75.75 0 010-1.5zm.011 3.022h.012a.75.75 0 010 1.5H12.75a.75.75 0 010-1.5z" })
+        )
+      ),
+      Logout: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", className: "w-5 h-5 mr-3 flex-shrink-0" },
+          React.createElement("path", { fillRule: "evenodd", d: "M2 10a.75.75 0 0 1 .75-.75h12.59l-2.1-1.95a.75.75 0 1 1 1.02-1.1l3.5 3.25a.75.75 0 0 1 0 1.1l-3.5 3.25a.75.75 0 1 1-1.02-1.1l2.1-1.95H2.75A.75.75 0 0 1 2 10Z", clipRule: "evenodd" })
+        )
+      ),
+      Plus: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-2" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 4.5v15m7.5-7.5h-15" })
+        )
+      ),
+      Pencil: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-4 h-4" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" })
+        )
+      ),
+      Trash: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-4 h-4" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" })
+        )
+      ),
+      Check: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-3 h-3" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M4.5 12.75l6 6 9-13.5" })
+        )
+      ),
+      Search: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 text-gray-400" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" })
+        )
+      ),
+      CalendarDays: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "input-icon-svg" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" })
+        )
+      ),
+      Clock: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "input-icon-svg" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" })
+        )
+      ),
+      X: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-6 h-6" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M6 18 18 6M6 6l12 12" })
+        )
+      ),
+      Eye: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-4 h-4 mr-1" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" }),
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" })
+        )
+      ),
+      Upload: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-8 h-8 mx-auto text-gray-400 mb-2" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" })
+        )
+      ),
+      Download: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-5 h-5 mr-2" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 13.5L12 17.25m0 0L7.5 13.5m4.5 3.75V4.5" })
+        )
+      ),
+      Menu: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-6 h-6" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" })
+        )
+      ),
+      Sun: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-6 h-6" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" })
+        )
+      ),
+      Moon: () => (
+        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: "1.5", stroke: "currentColor", className: "w-6 h-6" },
+          React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" })
+        )
+      ),
+    };
+
+    const ICON_MAP = {
+      "Inicio": Icon.Home,
+      "Asociación": Icon.Library,
+      "Clubes": Icon.Document,
+      "Jugadores": Icon.Users,
+      "Campeonato General": Icon.Trophy,
+      "Tablas de Posiciones": Icon.Table,
+      "Partidos Liguilla": Icon.Calendar,
+      "Tabla Liguilla": Icon.List,
+      "Admin. Liguilla": Icon.Cog,
+      "Suspensiones": Icon.Ban,
+      "Importar / Exportar": Icon.Arrow,
+      "Admin. Usuarios": Icon.UserCog,
+    };
+
+    function useLocalStorage(key, initialValue) {
+      const [value, setValue] = useState(() => {
+        try {
+          const stored = window.localStorage.getItem(key);
+          return stored ? JSON.parse(stored) : initialValue;
+        } catch {
+          return initialValue;
+        }
+      });
+      useEffect(() => {
+        window.localStorage.setItem(key, JSON.stringify(value));
+      }, [key, value]);
+      return [value, setValue];
+    }
+
+    function Modal({ title, children, visible, onClose, actions }) {
+      if (!visible) return null;
+      return React.createElement(
+        "div",
+        { className: "fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50" },
+        React.createElement(
+          "div",
+          { className: "bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-xl overflow-hidden" },
+          React.createElement(
+            "div",
+            { className: "px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between" },
+            React.createElement("h3", { className: "text-lg font-semibold text-gray-900 dark:text-slate-200" }, title),
+            React.createElement(
+              "button",
+              { onClick: onClose, className: "text-gray-500 hover:text-gray-700 dark:hover:text-slate-300" },
+              React.createElement(Icon.X, null)
+            )
+          ),
+          React.createElement("div", { className: "p-6 text-sm text-gray-700 dark:text-slate-300" }, children),
+          actions
+            ? React.createElement(
+                "div",
+                { className: "px-6 py-4 border-t border-gray-200 dark:border-slate-700 flex justify-end gap-3" },
+                actions
+              )
+            : null
+        )
+      );
+    }
+
+    function useSidebarLinks(activeSection, onNavigate) {
+      const links = [
+        { id: "inicio-section", label: "Inicio" },
+        { id: "asociacion-section", label: "Asociación" },
+        { id: "clubes-section", label: "Clubes" },
+        { id: "jugadores-section", label: "Jugadores" },
+        { id: "campeonato-section", label: "Campeonato General" },
+        { id: "tablas-section", label: "Tablas de Posiciones" },
+        { id: "partidos-liguilla-section", label: "Partidos Liguilla" },
+        { id: "tabla-liguilla-section", label: "Tabla Liguilla" },
+        { id: "admin-liguilla-section", label: "Admin. Liguilla" },
+        { id: "suspensiones-section", label: "Suspensiones" },
+        { id: "import-export-section", label: "Importar / Exportar" },
+        { id: "admin-usuarios-section", label: "Admin. Usuarios" },
+      ];
+      return links.map((link) => ({
+        ...link,
+        icon: ICON_MAP[link.label],
+        active: link.id === activeSection,
+        onClick: () => onNavigate(link.id),
+      }));
+    }
+
+    function Sidebar({ activeSection, collapsed, onToggle, onNavigate, associationDetails }) {
+      const links = useSidebarLinks(activeSection, onNavigate);
+      return React.createElement(
+        "aside",
+        { id: "sidebar-container", className: `bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 flex flex-col shadow-lg flex-shrink-0 ${collapsed ? "sidebar-collapsed w-20" : "w-64"}` },
+        React.createElement(
+          "div",
+          { className: `sidebar-header-logo-container ${collapsed ? "sidebar-collapsed" : "sidebar-expanded"} border-b border-gray-300 dark:border-slate-700` },
+          React.createElement("img", {
+            src: associationDetails.logoUrl,
+            alt: "Logo Asociación",
+            className: `${collapsed ? "h-10 w-10" : "h-36 w-auto"} object-contain`,
+            onError: (e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "https://placehold.co/144x144/cccccc/ffffff?text=Logo";
+            },
+          })
+        ),
+        React.createElement(
+          "nav",
+          { className: "flex-grow px-4 py-4 space-y-1 overflow-y-auto" },
+          links.map((link) =>
+            React.createElement(
+              "button",
+              {
+                key: link.id,
+                onClick: link.onClick,
+                title: link.label,
+                className: `sidebar-link flex items-center w-full px-4 py-2 rounded-md text-sm font-medium ${collapsed ? "justify-center" : ""} ${link.active ? "active" : "text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-slate-200"}`,
+              },
+              React.createElement(link.icon, null),
+              React.createElement("span", { className: `sidebar-link-label ${collapsed ? "hidden" : "ml-3"}` }, link.label)
+            )
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "px-4 py-4 border-t border-gray-300 dark:border-slate-700 mt-auto" },
+          React.createElement(
+            "button",
+            {
+              onClick: onToggle,
+              title: collapsed ? "Expandir Menú" : "Colapsar Menú",
+              className: `sidebar-link flex items-center w-full px-4 py-2 rounded-md text-sm font-medium text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-slate-200 ${collapsed ? "justify-center" : ""}`,
+            },
+            React.createElement(Icon.Menu, null),
+            React.createElement("span", { className: `sidebar-link-label ${collapsed ? "hidden" : "ml-3"}` }, "Menú")
+          ),
+          React.createElement(
+            "button",
+            {
+              onClick: () => onNavigate("logout"),
+              title: "Cerrar Sesión",
+              className: `sidebar-link flex items-center w-full px-4 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/50 hover:text-red-700 mt-2 ${collapsed ? "justify-center" : ""}`,
+            },
+            React.createElement(Icon.Logout, null),
+            React.createElement("span", { className: `sidebar-link-label ${collapsed ? "hidden" : "ml-3"}` }, "Cerrar Sesión")
+          )
+        )
+      );
+    }
+
+    function Header({ user, darkMode, onToggleDarkMode }) {
+      return React.createElement(
+        "header",
+        { className: "bg-white dark:bg-slate-800 shadow-sm border-b border-gray-300 dark:border-slate-700" },
+        React.createElement(
+          "div",
+          { className: "container mx-auto px-6 py-3 flex justify-between items-center" },
+          React.createElement("p", { className: "text-gray-600 dark:text-slate-300" }, `Bienvenido, ${user?.nombre || "Usuario"}`),
+          React.createElement(
+            "button",
+            {
+              onClick: onToggleDarkMode,
+              className: "p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-600 dark:text-slate-300",
+              title: darkMode ? "Modo Claro" : "Modo Oscuro",
+            },
+            darkMode ? React.createElement(Icon.Sun, null) : React.createElement(Icon.Moon, null)
+          )
+        )
+      );
+    }
+
+    function RenderSection({ sectionId, appState, actions }) {
+      switch (sectionId) {
+        case "inicio-section":
+          return React.createElement(InicioSection, { matches: appState.matches });
+        case "asociacion-section":
+          return React.createElement(AsociacionSection, { details: appState.associationDetails, onSave: actions.saveAssociation });
+        case "clubes-section":
+          return React.createElement(ClubesSection, {
+            clubs: appState.clubs,
+            associationDetails: appState.associationDetails,
+            onSaveClub: actions.saveClub,
+            onDeleteClub: actions.deleteClub,
+          });
+        case "jugadores-section":
+          return React.createElement(JugadoresSection, {
+            clubs: appState.clubs,
+            players: appState.players,
+            onSavePlayer: actions.savePlayer,
+            onDeletePlayer: actions.deletePlayer,
+          });
+        case "campeonato-section":
+          return React.createElement(CampeonatoSection, {
+            clubs: appState.clubs,
+            matches: appState.matches,
+            onSaveMatch: actions.saveMatch,
+            onDeleteMatch: actions.deleteMatch,
+            onRegisterResult: actions.registerResult,
+          });
+        case "tablas-section":
+          return React.createElement(TablasPosicionesSection, { clubs: appState.clubs, matches: appState.matches });
+        case "partidos-liguilla-section":
+          return React.createElement(PartidosLiguillaSection, {
+            clubs: appState.clubs,
+            matches: appState.liguillaMatches,
+            activeDivision: appState.activeLiguillaDivisionTab,
+            onSaveMatch: actions.saveLiguillaMatch,
+            onDeleteMatch: actions.deleteLiguillaMatch,
+            onRegisterResult: actions.registerLiguillaResult,
+            onChangeDivision: actions.setLiguillaDivisionTab,
+          });
+        case "admin-liguilla-section":
+          return React.createElement(AdminLiguillaSection, {
+            clubs: appState.clubs,
+            liguillaGroups: appState.liguillaGroups,
+            onAssignGroup: actions.assignClubToGroup,
+            onRemoveGroup: actions.removeClubFromGroup,
+            onSaveGroups: actions.saveLiguillaGroups,
+          });
+        case "tabla-liguilla-section":
+          return React.createElement(TablaLiguillaSection, {
+            clubs: appState.clubs,
+            matches: appState.liguillaMatches,
+            groups: appState.liguillaGroups,
+            activeGroup: appState.activeLiguillaGroupTab,
+            activeDivision: appState.activeLiguillaDivisionTab,
+            onChangeGroup: actions.setLiguillaGroupTab,
+            onChangeDivision: actions.setLiguillaDivisionTab,
+          });
+        case "suspensiones-section":
+          return React.createElement(SuspensionesSection, {
+            players: appState.players,
+            suspensions: appState.suspensions,
+            clubs: appState.clubs,
+            onSaveSuspension: actions.saveSuspension,
+            onDeleteSuspension: actions.deleteSuspension,
+          });
+        case "import-export-section":
+          return React.createElement(ImportExportSection, {
+            exportOptions: appState.exportOptions,
+            selectedImportFileName: appState.selectedImportFileName,
+            onImportFileChange: actions.setImportFileName,
+            onImportData: actions.importData,
+            onExportData: actions.exportData,
+            onToggleExportOption: actions.toggleExportOption,
+          });
+        case "admin-usuarios-section":
+          return React.createElement(AdminUsuariosSection, {
+            users: appState.users,
+            onSaveUser: actions.saveUser,
+            onDeleteUser: actions.deleteUser,
+          });
+        default:
+          return React.createElement(InicioSection, { matches: appState.matches });
+      }
+    }
+
+    function InicioSection({ matches }) {
+      const upcoming = matches.filter((match) => match.estado === "Pendiente").sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+      return React.createElement(
+        "div",
+        null,
+        React.createElement("div", { className: "bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md" },
+          React.createElement("h3", { className: "text-xl font-semibold mb-4 text-gray-700 dark:text-slate-200" }, "Próximos Partidos"),
+          React.createElement("div", { className: "overflow-x-auto" },
+            React.createElement("table", { className: "min-w-full text-sm text-left text-gray-500 dark:text-slate-400" },
+              React.createElement("thead", { className: "text-xs text-gray-700 dark:text-slate-300 uppercase bg-gray-50 dark:bg-slate-700" },
+                React.createElement("tr", null,
+                  ["Fecha", "Local", "Visitante", "División", "Hora"].map((label) => React.createElement("th", { key: label, className: "px-6 py-3" }, label))
+                )
+              ),
+              React.createElement("tbody", null,
+                upcoming.length > 0
+                  ? upcoming.map((match) =>
+                      React.createElement("tr", { key: match.id, className: "bg-white dark:bg-slate-800 border-b border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700" },
+                        React.createElement("td", { className: "px-6 py-4 text-gray-900 dark:text-slate-200" }, formatDateForDisplay(match.fecha)),
+                        React.createElement("td", { className: "px-6 py-4 font-medium text-gray-900 dark:text-slate-200 whitespace-nowrap" }, match.local),
+                        React.createElement("td", { className: "px-6 py-4 font-medium text-gray-900 dark:text-slate-200 whitespace-nowrap" }, match.visitante),
+                        React.createElement("td", { className: "px-6 py-4 text-gray-700 dark:text-slate-300" }, match.division),
+                        React.createElement("td", { className: "px-6 py-4 text-gray-700 dark:text-slate-300" }, match.hora)
+                      )
+                    )
+                  : React.createElement("tr", { className: "bg-white dark:bg-slate-800 border-b border-gray-300 dark:border-slate-700" },
+                      React.createElement("td", { colSpan: 5, className: "px-6 py-4 text-center text-gray-400 dark:text-slate-500" }, "No hay próximos partidos programados.")
+                    )
+              )
+            )
+          )
+        )
+      );
+    }
+
+    function AsociacionSection({ details, onSave }) {
+      const [form, setForm] = useState(details);
+      useEffect(() => {
+        setForm(details);
+      }, [details]);
+      return React.createElement(
+        "div",
+        { className: "bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md" },
+        React.createElement("h2", { className: "text-2xl font-semibold text-gray-700 dark:text-slate-200 mb-6" }, "Datos de la Asociación"),
+        React.createElement("form", {
+          onSubmit: (e) => {
+            e.preventDefault();
+            onSave(form);
+          },
+        },
+          React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-6" },
+            React.createElement("div", { className: "md:col-span-2 space-y-4" },
+              renderInput("Nombre de la Asociación", "nombre", form, setForm),
+              renderInput("Correo Electrónico Institucional", "email", form, setForm, "email"),
+              React.createElement("h3", { className: "text-lg font-semibold text-gray-700 dark:text-slate-200 mt-6 mb-3 border-t border-gray-300 dark:border-slate-700 pt-4" }, "Directiva"),
+              React.createElement("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-4" },
+                renderInput("Presidente", "presidente", form, setForm),
+                renderInput("Secretario", "secretario", form, setForm),
+                renderInput("Tesorero", "tesorero", form, setForm),
+                renderInput("Director 1", "director1", form, setForm),
+                renderInput("Director 2", "director2", form, setForm),
+                renderInput("Director 3", "director3", form, setForm)
+              )
+            ),
+            React.createElement("div", { className: "md:col-span-1" },
+              renderInput("URL del Logo/Insignia", "logoUrl", form, setForm, "url"),
+              React.createElement("img", {
+                id: "asocLogoPreview",
+                src: form.logoUrl,
+                alt: "Vista previa del Logo",
+                className: "mt-2 h-40 w-auto object-contain rounded border border-gray-300 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 p-1 mx-auto",
+                onError: (e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "https://placehold.co/160x160/cccccc/ffffff?text=Logo";
+                },
+              }),
+              React.createElement("p", { className: "text-xs text-gray-500 dark:text-slate-400 mt-1 text-center" }, "La vista previa se actualizará al guardar.")
+            )
+          ),
+          React.createElement("div", { className: "flex justify-end space-x-3 mt-8 pt-4 border-t border-gray-300 dark:border-slate-700" },
+            React.createElement("button", { type: "submit", className: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md" }, "Guardar Cambios")
+          )
+        )
+      );
+    }
+
+    function renderInput(label, name, form, setForm, type = "text") {
+      return React.createElement("div", null,
+        React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: name }, label),
+        React.createElement("input", {
+          id: name,
+          name,
+          type,
+          value: form[name] || "",
+          onChange: (e) => setForm({ ...form, [name]: e.target.value }),
+          className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
+        })
+      );
+    }
+
+    function ClubesSection({ clubs, onSaveClub, onDeleteClub }) {
+      const [isFormVisible, setIsFormVisible] = useState(false);
+      const [editingClub, setEditingClub] = useState(null);
+      const [form, setForm] = useState({ nombre: "", presidente: "", tesorero: "", secretario: "", email: "", divisiones: ALL_DIVISIONES });
+
+      useEffect(() => {
+        if (editingClub) {
+          setForm(editingClub);
+          setIsFormVisible(true);
+        }
+      }, [editingClub]);
+
+      function handleOpenForm(club = null) {
+        if (club) {
+          setEditingClub(club);
+          setForm(club);
+        } else {
+          setEditingClub(null);
+          setForm({ nombre: "", presidente: "", tesorero: "", secretario: "", email: "", divisiones: [] });
+        }
+        setIsFormVisible(true);
+      }
+
+      function handleSave(e) {
+        e.preventDefault();
+        const normalized = { ...form, id: editingClub ? editingClub.id : undefined };
+        onSaveClub(normalized);
+        setIsFormVisible(false);
+        setEditingClub(null);
+      }
+
+      return React.createElement(
+        "div",
+        null,
+        React.createElement("div", { className: "flex justify-between items-center mb-6" },
+          React.createElement("h2", { className: "text-2xl font-semibold text-gray-700 dark:text-slate-200" }, "Gestión de Clubes"),
+          React.createElement("button", { onClick: () => handleOpenForm(), className: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center" }, React.createElement(Icon.Plus, null), "Agregar Club")
+        ),
+        isFormVisible
+          ? React.createElement("div", { className: "bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md" },
+              React.createElement("form", { onSubmit: handleSave },
+                React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6" },
+                  [
+                    { label: "Nombre del Club", name: "nombre" },
+                    { label: "Presidente", name: "presidente" },
+                    { label: "Tesorero", name: "tesorero" },
+                    { label: "Secretario", name: "secretario" },
+                    { label: "Email Institucional", name: "email", type: "email" },
+                  ].map((field) =>
+                    React.createElement("div", { key: field.name },
+                      React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: field.name }, field.label),
+                      React.createElement("input", {
+                        id: field.name,
+                        type: field.type || "text",
+                        value: form[field.name] || "",
+                        onChange: (e) => setForm({ ...form, [field.name]: e.target.value }),
+                        className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
+                      })
+                    )
+                  ),
+                  React.createElement("div", { className: "md:col-span-2" },
+                    React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2" }, "Divisiones"),
+                    React.createElement("div", { className: "grid grid-cols-2 gap-2 border border-gray-300 dark:border-slate-600 p-3 rounded-md max-h-60 overflow-y-auto" },
+                      ALL_DIVISIONES.map((division) =>
+                        React.createElement("label", { key: division, className: "flex items-center gap-2 text-sm dark:text-slate-300" },
+                          React.createElement("input", {
+                            type: "checkbox",
+                            checked: form.divisiones.includes(division),
+                            onChange: (e) => {
+                              const next = e.target.checked
+                                ? [...form.divisiones, division]
+                                : form.divisiones.filter((d) => d !== division);
+                              setForm({ ...form, divisiones: next });
+                            },
+                            className: "h-4 w-4 rounded border-gray-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500",
+                          }),
+                          division
+                        )
+                      )
+                    )
+                  )
+                ),
+                React.createElement("div", { className: "flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-300 dark:border-slate-700" },
+                  React.createElement("button", { type: "button", onClick: () => { setIsFormVisible(false); setEditingClub(null); }, className: "bg-gray-200 dark:bg-slate-600 hover:bg-gray-300 dark:hover:bg-slate-500 text-gray-700 dark:text-slate-200 font-medium py-2 px-4 rounded-md" }, "Cancelar"),
+                  React.createElement("button", { type: "submit", className: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md" }, editingClub ? "Guardar" : "Agregar")
+                )
+              )
+            )
+          : null,
+        React.createElement("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" },
+          clubs.map((club) =>
+            React.createElement("div", { key: club.id, className: "bg-white dark:bg-slate-800 p-4 rounded-lg shadow-md border border-gray-300 dark:border-slate-700 flex flex-col justify-between" },
+              React.createElement("div", null,
+                React.createElement("div", { className: "w-16 h-16 rounded-full bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-2xl font-semibold text-gray-500 dark:text-slate-400 mx-auto mb-4" }, club.nombre.charAt(0).toUpperCase()),
+                React.createElement("h3", { className: "text-md font-semibold text-center mb-3 text-gray-800 dark:text-slate-200" }, club.nombre),
+                React.createElement("div", { className: "text-xs text-gray-600 dark:text-slate-400 space-y-1 mb-3" },
+                  renderInfoLine("Presidente", club.presidente),
+                  renderInfoLine("Tesorero", club.tesorero),
+                  renderInfoLine("Secretario", club.secretario),
+                  renderInfoLine("Email", club.email)
+                ),
+                React.createElement("p", { className: "text-xs font-medium text-gray-700 dark:text-slate-300 mb-1" }, "Divisiones:"),
+                React.createElement("div", { className: "flex flex-wrap mb-4" },
+                  (club.divisiones || []).slice(0, 4).map((division) =>
+                    React.createElement("span", { key: division, className: "division-tag text-blue-800 bg-blue-100 dark:bg-slate-700 dark:text-sky-400" }, division)
+                  ),
+                  club.divisiones.length > 4 ? React.createElement("span", { className: "division-tag text-gray-600 bg-gray-100 dark:bg-slate-600 dark:text-slate-400" }, "...") : null
+                )
+              ),
+              React.createElement("div", { className: "flex justify-end space-x-2 border-t border-gray-300 dark:border-slate-700 pt-3 mt-4" },
+                React.createElement("button", { onClick: () => handleOpenForm(club), className: "bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-300 text-xs font-medium p-2 rounded inline-flex items-center justify-center" }, React.createElement(Icon.Pencil, null)),
+                React.createElement("button", { onClick: () => onDeleteClub(club.id), className: "bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/50 text-red-700 dark:text-red-400 text-xs font-medium p-2 rounded inline-flex items-center justify-center" }, React.createElement(Icon.Trash, null))
+              )
+            )
+          )
+        )
+      );
+    }
+
+    function renderInfoLine(label, value) {
+      return React.createElement("p", null,
+        React.createElement("span", { className: "font-medium text-gray-700 dark:text-slate-300" }, `${label}: `),
+        value || "No asignado"
+      );
+    }
+
+    function JugadoresSection({ clubs, players, onSavePlayer, onDeletePlayer }) {
+      const [searchTerm, setSearchTerm] = useState("");
+      const [clubFilter, setClubFilter] = useState("");
+      const [divisionFilter, setDivisionFilter] = useState("");
+      const [isFormVisible, setIsFormVisible] = useState(false);
+      const [editingPlayer, setEditingPlayer] = useState(null);
+      const [form, setForm] = useState({ nombres: "", apellidos: "", cedula: "", fechaNac: "", club: "", division: "", fechaOficio: "", fechaIngreso: "", estado: "Activo" });
+
+      useEffect(() => {
+        if (editingPlayer) {
+          setForm({
+            ...editingPlayer,
+            fechaNac: formatDateToDDMMYYYY(editingPlayer.fechaNac),
+            fechaOficio: editingPlayer.fechaOficio ? formatDateToDDMMYYYY(editingPlayer.fechaOficio) : "",
+            fechaIngreso: editingPlayer.fechaIngreso ? formatDateToDDMMYYYY(editingPlayer.fechaIngreso) : "",
+          });
+          setIsFormVisible(true);
+        }
+      }, [editingPlayer]);
+
+      const filtered = useMemo(() => {
+        return players.filter((player) => {
+          const term = searchTerm.toLowerCase();
+          const matchesTerm = [player.nombres, player.apellidos, player.cedula].some((value) => value.toLowerCase().includes(term));
+          const matchesClub = !clubFilter || player.club === clubFilter;
+          const matchesDivision = !divisionFilter || player.division === divisionFilter;
+          return matchesTerm && matchesClub && matchesDivision;
+        });
+      }, [players, searchTerm, clubFilter, divisionFilter]);
+
+      function handleSave(e) {
+        e.preventDefault();
+        const payload = {
+          ...form,
+          fechaNac: formatDateForInput(form.fechaNac),
+          fechaOficio: form.fechaOficio ? formatDateForInput(form.fechaOficio) : null,
+          fechaIngreso: form.fechaIngreso ? formatDateForInput(form.fechaIngreso) : null,
+        };
+        if (editingPlayer) payload.id = editingPlayer.id;
+        onSavePlayer(payload);
+        setEditingPlayer(null);
+        setIsFormVisible(false);
+      }
+
+      return React.createElement(
+        "div",
+        null,
+        React.createElement("div", { className: "flex justify-between items-center mb-6" },
+          React.createElement("h2", { className: "text-2xl font-semibold text-gray-700 dark:text-slate-200" }, "Gestión de Jugadores"),
+          React.createElement("button", { onClick: () => { setEditingPlayer(null); setForm({ nombres: "", apellidos: "", cedula: "", fechaNac: "", club: "", division: "", fechaOficio: "", fechaIngreso: "", estado: "Activo" }); setIsFormVisible(true); }, className: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center" }, React.createElement(Icon.Plus, null), "Agregar Jugador")
+        ),
+        isFormVisible && React.createElement("div", { className: "bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-6" },
+          React.createElement("form", { onSubmit: handleSave, className: "space-y-6" },
+            React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6" },
+              renderPlayerInput("Nombres", "nombres", form, setForm),
+              renderPlayerInput("Apellidos", "apellidos", form, setForm),
+              renderPlayerInput("Cédula de Identidad", "cedula", form, setForm, "text", editingPlayer ? true : false),
+              renderPlayerInput("Fecha Nacimiento", "fechaNac", form, setForm, "text"),
+              React.createElement("div", null,
+                React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "club" }, "Club"),
+                React.createElement("select", {
+                  id: "club",
+                  value: form.club,
+                  onChange: (e) => setForm({ ...form, club: e.target.value }),
+                  className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md",
+                },
+                  React.createElement("option", { value: "" }, "Seleccionar club..."),
+                  clubs.map((club) => React.createElement("option", { key: club.id, value: club.nombre }, club.nombre))
+                )
+              ),
+              React.createElement("div", null,
+                React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "division" }, "División"),
+                React.createElement("select", {
+                  id: "division",
+                  value: form.division,
+                  onChange: (e) => setForm({ ...form, division: e.target.value }),
+                  className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md",
+                },
+                  React.createElement("option", { value: "" }, "Seleccionar división..."),
+                  ALL_DIVISIONES.map((division) => React.createElement("option", { key: division, value: division }, division))
+                )
+              ),
+              renderPlayerInput("Fecha Oficio Asociación", "fechaOficio", form, setForm, "text"),
+              renderPlayerInput("Fecha Ingreso Club", "fechaIngreso", form, setForm, "text"),
+              React.createElement("div", { className: "md:col-span-2" },
+                React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "estado" }, "Estado"),
+                React.createElement("select", {
+                  id: "estado",
+                  value: form.estado,
+                  onChange: (e) => setForm({ ...form, estado: e.target.value }),
+                  className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md",
+                },
+                  ["Activo", "Inactivo", "Rechazado"].map((estado) => React.createElement("option", { key: estado, value: estado }, estado))
+                )
+              )
+            ),
+            React.createElement("div", { className: "flex justify-end space-x-3" },
+              React.createElement("button", { type: "button", onClick: () => setIsFormVisible(false), className: "bg-gray-200 dark:bg-slate-600 hover:bg-gray-300 dark:hover:bg-slate-500 text-gray-700 dark:text-slate-200 font-medium py-2 px-4 rounded-md" }, "Cancelar"),
+              React.createElement("button", { type: "submit", className: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md" }, editingPlayer ? "Guardar Cambios" : "Agregar Jugador")
+            )
+          )
+        ),
+        React.createElement("div", { className: "bg-white dark:bg-slate-800 p-4 rounded-lg shadow-md mb-6" },
+          React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4" },
+            React.createElement("div", { className: "relative" },
+              React.createElement("div", { className: "absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" }, React.createElement(Icon.Search, null)),
+              React.createElement("input", {
+                type: "text",
+                placeholder: "Buscar por nombre o cédula...",
+                value: searchTerm,
+                onChange: (e) => setSearchTerm(e.target.value),
+                className: "w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              })
+            ),
+            React.createElement("select", {
+              className: "w-full px-4 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              value: clubFilter,
+              onChange: (e) => setClubFilter(e.target.value),
+            },
+              React.createElement("option", { value: "" }, "Todos los clubes"),
+              clubs.map((club) => React.createElement("option", { key: club.id, value: club.nombre }, club.nombre))
+            ),
+            React.createElement("select", {
+              className: "w-full px-4 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+              value: divisionFilter,
+              onChange: (e) => setDivisionFilter(e.target.value),
+            },
+              React.createElement("option", { value: "" }, "Todas las divisiones"),
+              ALL_DIVISIONES.map((division) => React.createElement("option", { key: division, value: division }, division))
+            )
+          )
+        ),
+        React.createElement("div", { className: "bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden" },
+          React.createElement("div", { className: "overflow-x-auto" },
+            React.createElement("table", { className: "min-w-full text-sm text-left text-gray-700 dark:text-slate-300" },
+              React.createElement("thead", { className: "text-xs text-gray-700 dark:text-slate-400 uppercase bg-gray-100 dark:bg-slate-700" },
+                React.createElement("tr", null,
+                  ["Nombres", "Apellidos", "Cédula", "Club", "División", "Fecha Nac.", "Fecha Oficio", "Fecha Ingreso", "Estado", "Acciones"].map((th) => React.createElement("th", { key: th, className: "px-4 py-3" }, th))
+                )
+              ),
+              React.createElement("tbody", null,
+                filtered.length > 0
+                  ? filtered.map((player) =>
+                      React.createElement("tr", { key: player.id, className: "bg-white dark:bg-slate-800 border-b border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700" },
+                        React.createElement("td", { className: "px-4 py-2 font-medium text-gray-900 dark:text-slate-200 whitespace-nowrap" }, player.nombres),
+                        React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, player.apellidos),
+                        React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, player.cedula),
+                        React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, player.club),
+                        React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, player.division),
+                        React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, formatDateForDisplay(player.fechaNac)),
+                        React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, formatDateForDisplay(player.fechaOficio)),
+                        React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, formatDateForDisplay(player.fechaIngreso)),
+                        React.createElement("td", { className: "px-4 py-2" }, React.createElement("span", { className: player.estado === "Activo" ? "status-active" : "status-inactive" }, player.estado)),
+                        React.createElement("td", { className: "px-4 py-2 text-center space-x-1 whitespace-nowrap" },
+                          React.createElement("button", { onClick: () => { setEditingPlayer(player); }, className: "bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-300 text-xs font-medium p-1.5 rounded inline-flex items-center" }, React.createElement(Icon.Pencil, null)),
+                          React.createElement("button", { onClick: () => onDeletePlayer(player.id), className: "bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/50 text-red-700 dark:text-red-400 text-xs font-medium p-1.5 rounded inline-flex items-center" }, React.createElement(Icon.Trash, null))
+                        )
+                      )
+                    )
+                  : React.createElement("tr", null,
+                      React.createElement("td", { colSpan: 10, className: "px-4 py-4 text-center text-gray-500 dark:text-slate-400" }, "No se encontraron jugadores con los criterios actuales.")
+                    )
+              )
+            )
+          )
+        )
+      );
+    }
+
+    function renderPlayerInput(label, name, form, setForm, type = "text", disabled = false) {
+      return React.createElement("div", null,
+        React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: name }, label),
+        React.createElement("input", {
+          id: name,
+          type,
+          value: form[name] || "",
+          disabled,
+          onChange: (e) => setForm({ ...form, [name]: e.target.value }),
+          placeholder: name === "cedula" ? "12345678-9" : "",
+          className: `w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md ${disabled ? "opacity-70 cursor-not-allowed" : ""}`,
+        })
+      );
+    }
+
+    function CampeonatoSection({ clubs, matches, onSaveMatch, onDeleteMatch, onRegisterResult }) {
+      const [divisionFilter, setDivisionFilter] = useState("");
+      const [formOpen, setFormOpen] = useState(false);
+      const [editingMatch, setEditingMatch] = useState(null);
+      const filteredMatches = matches.filter((m) => !divisionFilter || m.division === divisionFilter);
+
+      function handleSave(data) {
+        onSaveMatch(data);
+        setFormOpen(false);
+        setEditingMatch(null);
+      }
+
+      return React.createElement(
+        "div",
+        null,
+        React.createElement("div", { className: "flex justify-between items-center mb-6" },
+          React.createElement("h2", { className: "text-2xl font-semibold text-gray-700 dark:text-slate-200" }, "Campeonato General"),
+          React.createElement("div", { className: "flex items-center space-x-3" },
+            React.createElement("select", {
+              id: "campeonatoDivisionFilter",
+              value: divisionFilter,
+              onChange: (e) => setDivisionFilter(e.target.value),
+              className: "px-4 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm",
+            },
+              React.createElement("option", { value: "" }, "Todas las divisiones"),
+              ALL_DIVISIONES.map((division) => React.createElement("option", { key: division, value: division }, division))
+            ),
+            React.createElement("button", { onClick: () => { setEditingMatch(null); setFormOpen(true); }, className: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center text-sm" }, React.createElement(Icon.Plus, null), "Programar Partido")
+          )
+        ),
+        formOpen && React.createElement(PartidoForm, { clubs, match: editingMatch, onCancel: () => { setFormOpen(false); setEditingMatch(null); }, onSave: handleSave, isLiguilla: false }),
+        React.createElement("div", { className: "bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden" },
+          React.createElement("h3", { className: "text-lg font-semibold text-gray-700 dark:text-slate-200 p-4 border-b border-gray-300 dark:border-slate-700" }, "Partidos del Campeonato"),
+          React.createElement("div", { className: "overflow-x-auto" },
+            React.createElement("table", { className: "min-w-full text-sm text-left text-gray-700 dark:text-slate-300" },
+              React.createElement("thead", { className: "text-xs text-gray-700 dark:text-slate-400 uppercase bg-gray-100 dark:bg-slate-700" },
+                React.createElement("tr", null,
+                  ["Fecha", "Hora", "Local", "Resultado", "Visitante", "División", "Estado", "Acciones"].map((col) => React.createElement("th", { key: col, className: "px-4 py-3" }, col))
+                )
+              ),
+              React.createElement("tbody", null,
+                filteredMatches.length > 0
+                  ? filteredMatches.map((match) => React.createElement(PartidoRow, { key: match.id, match, onEdit: () => { setEditingMatch(match); setFormOpen(true); }, onDelete: () => onDeleteMatch(match.id), onRegisterResult }))
+                  : React.createElement("tr", null,
+                      React.createElement("td", { colSpan: 8, className: "px-4 py-4 text-center text-gray-500 dark:text-slate-400" }, "No hay partidos programados para el campeonato general.")
+                    )
+              )
+            )
+          )
+        )
+      );
+    }
+
+    function PartidoRow({ match, onEdit, onDelete, onRegisterResult }) {
+      const isFinalized = match.estado === "Finalizado";
+      return React.createElement("tr", { className: "bg-white dark:bg-slate-800 border-b border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700" },
+        React.createElement("td", { className: "px-4 py-2 text-gray-900 dark:text-slate-200" }, formatDateForDisplay(match.fecha)),
+        React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, match.hora),
+        React.createElement("td", { className: "px-4 py-2 font-medium text-gray-900 dark:text-slate-200 whitespace-nowrap" }, match.local),
+        React.createElement("td", { className: "px-4 py-2 text-center dark:text-slate-200" },
+          isFinalized
+            ? React.createElement("span", { className: "font-semibold" }, match.resultado || "-")
+            : React.createElement("div", { className: "flex items-center justify-center space-x-1" },
+                React.createElement("input", { type: "number", min: "0", className: "result-input local-score w-10 text-center", placeholder: "L", "data-match-id": match.id, "data-team": "local" }),
+                React.createElement("span", null, "-"),
+                React.createElement("input", { type: "number", min: "0", className: "result-input visitor-score w-10 text-center", placeholder: "V", "data-match-id": match.id, "data-team": "visitor" })
+              )
+        ),
+        React.createElement("td", { className: "px-4 py-2 font-medium text-gray-900 dark:text-slate-200 whitespace-nowrap" }, match.visitante),
+        React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, match.division),
+        React.createElement("td", { className: "px-4 py-2" }, React.createElement("span", { className: match.estado === "Finalizado" ? "status-active" : "status-pending" }, match.estado)),
+        React.createElement("td", { className: "px-4 py-2 text-center space-x-1 whitespace-nowrap" },
+          !isFinalized && React.createElement("button", { onClick: () => onRegisterResult(match.id), className: "register-result-btn bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium p-1.5 rounded inline-flex items-center justify-center", title: "Registrar Resultado" }, React.createElement(Icon.Check, null)),
+          React.createElement("button", { onClick: onEdit, className: "edit-match-btn bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-300 text-xs font-medium p-1.5 rounded inline-flex items-center justify-center mr-1" }, React.createElement(Icon.Pencil, null)),
+          React.createElement("button", { onClick: onDelete, className: "delete-match-btn bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/50 text-red-700 dark:text-red-400 text-xs font-medium p-1.5 rounded inline-flex items-center justify-center" }, React.createElement(Icon.Trash, null))
+        )
+      );
+    }
+
+    function PartidoForm({ clubs, match, onCancel, onSave, isLiguilla }) {
+      const [form, setForm] = useState({
+        fecha: match?.fecha ? formatDateToDDMMYYYY(match.fecha) : "",
+        hora: match?.hora || "",
+        local: match?.local || "",
+        visitante: match?.visitante || "",
+        division: match?.division || "",
+        grupo: match?.grupo || LIGUILLA_GROUPS[0],
+      });
+
+      function handleSubmit(e) {
+        e.preventDefault();
+        const payload = {
+          ...match,
+          ...form,
+          fecha: formatDateForInput(form.fecha),
+          estado: match?.estado || "Pendiente",
+          resultado: match?.resultado || "",
+        };
+        onSave(payload);
+      }
+
+      return React.createElement(
+        "div",
+        { className: "bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-6" },
+        React.createElement("div", { className: "flex justify-between items-center mb-4" },
+          React.createElement("h3", { className: "text-xl font-semibold text-gray-800 dark:text-slate-200" }, match ? `Editar Partido${isLiguilla ? " de Liguilla" : ""}` : `Programar Partido${isLiguilla ? " de Liguilla" : ""}`)
+        ),
+        React.createElement("form", { onSubmit: handleSubmit },
+          React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4 mb-4" },
+            renderFormField("Fecha", "fecha", form, setForm, "text", "DD-MM-AAAA", Icon.CalendarDays),
+            renderFormField("Hora", "hora", form, setForm, "time", null, Icon.Clock)
+          ),
+          renderSelectField("Equipo Local", "local", clubs, form, setForm),
+          renderSelectField("Equipo Visitante", "visitante", clubs, form, setForm),
+          renderSelectField("División", "division", ALL_DIVISIONES.map((d) => ({ value: d, label: d })), form, setForm),
+          isLiguilla && renderSelectField("Grupo", "grupo", LIGUILLA_GROUPS.map((g) => ({ value: g, label: g })), form, setForm),
+          React.createElement("div", { className: "flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-300 dark:border-slate-700" },
+            React.createElement("button", { type: "button", onClick: onCancel, className: "bg-gray-200 dark:bg-slate-600 hover:bg-gray-300 dark:hover:bg-slate-500 text-gray-700 dark:text-slate-200 font-medium py-2 px-4 rounded-md" }, "Cancelar"),
+            React.createElement("button", { type: "submit", className: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md" }, "Guardar")
+          )
+        )
+      );
+    }
+
+    function renderFormField(label, name, form, setForm, type = "text", placeholder = "", IconComponent) {
+      return React.createElement("div", null,
+        React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: name }, label),
+        React.createElement("div", { className: IconComponent ? "input-with-icon" : "" },
+          IconComponent ? React.createElement(IconComponent, null) : null,
+          React.createElement("input", {
+            id: name,
+            type,
+            placeholder,
+            value: form[name] || "",
+            onChange: (e) => setForm({ ...form, [name]: e.target.value }),
+            className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
+          })
+        )
+      );
+    }
+
+    function renderSelectField(label, name, options, form, setForm) {
+      return React.createElement("div", null,
+        React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: name }, label),
+        React.createElement("select", {
+          id: name,
+          value: form[name] || "",
+          onChange: (e) => setForm({ ...form, [name]: e.target.value }),
+          className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
+        },
+          React.createElement("option", { value: "" }, `Seleccionar ${label.toLowerCase()}...`),
+          options.map((option) =>
+            typeof option === "string"
+              ? React.createElement("option", { key: option, value: option }, option)
+              : React.createElement("option", { key: option.value, value: option.value }, option.label)
+          )
+        )
+      );
+    }
+
+    function TablasPosicionesSection({ clubs, matches }) {
+      const [activeTab, setActiveTab] = useState("General");
+      const standingsData = useMemo(() => calculateStandings(matches, clubs, ALL_DIVISIONES, null, false), [matches, clubs]);
+      const currentData = activeTab === "General" ? standingsData.general : standingsData.byDivision[activeTab] || [];
+      const title = activeTab === "General" ? "Tabla de Posiciones - General" : `Tabla de Posiciones - ${activeTab}`;
+      const tabs = ["General", ...ALL_DIVISIONES];
+      return React.createElement("div", null,
+        React.createElement("div", { className: "flex justify-between items-center mb-4" },
+          React.createElement("h2", { className: "text-2xl font-semibold text-gray-700 dark:text-slate-200" }, "Tabla de Posiciones")
+        ),
+        React.createElement("div", { className: "flex flex-wrap gap-1 mb-4 border-b border-gray-300 dark:border-slate-700 pb-2" },
+          tabs.map((tab) => React.createElement("button", {
+            key: tab,
+            onClick: () => setActiveTab(tab),
+            className: `tab-button px-3 py-1 rounded-md text-sm font-medium ${activeTab === tab ? "bg-blue-100 dark:bg-blue-600 text-blue-700 dark:text-white" : "text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700"}`,
+          }, tab))
+        ),
+        React.createElement(StandingsTable, { standings: currentData, title })
+      );
+    }
+
+    function calculateStandings(matches, clubs, allDivisions, liguillaGroups, forLiguilla) {
+      const finished = matches.filter((m) => (forLiguilla ? m.estado === "Completado" : m.estado === "Finalizado") && m.resultado);
+      const standings = forLiguilla ? {} : { general: {}, byDivision: {} };
+      if (forLiguilla) {
+        LIGUILLA_GROUPS.forEach((group) => {
+          standings[group] = {};
+          allDivisions.forEach((div) => {
+            standings[group][div] = {};
+          });
+        });
+      } else {
+        clubs.forEach((club) => {
+          standings.general[club.nombre] = { club: club.nombre, pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, dif: 0, pts: 0 };
+          allDivisions.forEach((division) => {
+            if (!standings.byDivision[division]) standings.byDivision[division] = {};
+            if (club.divisiones.includes(division)) {
+              standings.byDivision[division][club.nombre] = { club: club.nombre, pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, dif: 0, pts: 0 };
+            }
+          });
+        });
+      }
+      finished.forEach((match) => {
+        const [gLS, gVS] = match.resultado.split("-").map(Number);
+        if (Number.isNaN(gLS) || Number.isNaN(gVS)) return;
+        const loc = match.local;
+        const vis = match.visitante;
+        const div = match.division;
+        const grp = match.grupo;
+        const tables = [];
+        if (forLiguilla) {
+          if (standings[grp] && standings[grp][div]) {
+            if (!standings[grp][div][loc]) standings[grp][div][loc] = { club: loc, pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, dif: 0, pts: 0 };
+            if (!standings[grp][div][vis]) standings[grp][div][vis] = { club: vis, pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, dif: 0, pts: 0 };
+            tables.push(standings[grp][div]);
+          }
+        } else {
+          tables.push(standings.general);
+          if (standings.byDivision[div]) tables.push(standings.byDivision[div]);
+        }
+        tables.forEach((table) => {
+          const home = table[loc] || { club: loc, pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, dif: 0, pts: 0 };
+          const away = table[vis] || { club: vis, pj: 0, pg: 0, pe: 0, pp: 0, gf: 0, gc: 0, dif: 0, pts: 0 };
+          home.pj++;
+          away.pj++;
+          home.gf += gLS;
+          away.gf += gVS;
+          home.gc += gVS;
+          away.gc += gLS;
+          if (gLS > gVS) {
+            home.pg++;
+            away.pp++;
+            home.pts += 3;
+          } else if (gVS > gLS) {
+            away.pg++;
+            home.pp++;
+            away.pts += 3;
+          } else {
+            home.pe++;
+            away.pe++;
+            home.pts += 1;
+            away.pts += 1;
+          }
+          home.dif = home.gf - home.gc;
+          away.dif = away.gf - away.gc;
+          table[loc] = home;
+          table[vis] = away;
+        });
+      });
+      const sort = (a, b) => b.pts - a.pts || b.dif - a.dif || b.gf - a.gf;
+      if (forLiguilla) {
+        return LIGUILLA_GROUPS.reduce((acc, group) => {
+          acc[group] = {};
+          allDivisions.forEach((division) => {
+            acc[group][division] = standings[group][division] ? Object.values(standings[group][division]).sort(sort) : [];
+          });
+          return acc;
+        }, {});
+      }
+      return {
+        general: Object.values(standings.general).sort(sort),
+        byDivision: allDivisions.reduce((acc, division) => {
+          acc[division] = standings.byDivision[division] ? Object.values(standings.byDivision[division]).sort(sort) : [];
+          return acc;
+        }, {}),
+      };
+    }
+
+    function StandingsTable({ standings, title }) {
+      return React.createElement("div", { className: "bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden mb-6" },
+        React.createElement("h3", { className: "text-lg font-semibold text-gray-700 dark:text-slate-200 p-4 border-b border-gray-300 dark:border-slate-700" }, title),
+        React.createElement("div", { className: "overflow-x-auto" },
+          React.createElement("table", { className: "min-w-full text-sm text-left text-gray-700 dark:text-slate-300" },
+            React.createElement("thead", { className: "text-xs text-gray-700 dark:text-slate-400 uppercase bg-gray-100 dark:bg-slate-700" },
+              React.createElement("tr", null,
+                ["POS", "CLUB", "PJ", "PG", "PE", "PP", "GF", "GC", "DIF", "PTS"].map((col) => React.createElement("th", { key: col, className: "px-4 py-3 text-center" }, col))
+              )
+            ),
+            React.createElement("tbody", null,
+              standings.length > 0
+                ? standings.map((team, index) => React.createElement("tr", { key: team.club, className: "bg-white dark:bg-slate-800 border-b border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700" },
+                    React.createElement("td", { className: "px-4 py-2 text-center font-medium text-gray-900 dark:text-slate-200" }, index + 1),
+                    React.createElement("td", { className: "px-4 py-2 font-medium text-gray-900 dark:text-slate-200 whitespace-nowrap" }, team.club),
+                    React.createElement("td", { className: "px-4 py-2 text-center dark:text-slate-300" }, team.pj),
+                    React.createElement("td", { className: "px-4 py-2 text-center dark:text-slate-300" }, team.pg),
+                    React.createElement("td", { className: "px-4 py-2 text-center dark:text-slate-300" }, team.pe),
+                    React.createElement("td", { className: "px-4 py-2 text-center dark:text-slate-300" }, team.pp),
+                    React.createElement("td", { className: "px-4 py-2 text-center dark:text-slate-300" }, team.gf),
+                    React.createElement("td", { className: "px-4 py-2 text-center dark:text-slate-300" }, team.gc),
+                    React.createElement("td", { className: "px-4 py-2 text-center dark:text-slate-300" }, team.dif),
+                    React.createElement("td", { className: "px-4 py-2 text-center font-bold dark:text-slate-200" }, team.pts)
+                  ))
+                : React.createElement("tr", null,
+                    React.createElement("td", { colSpan: 10, className: "px-4 py-4 text-center text-gray-500 dark:text-slate-400" }, "No hay datos disponibles para esta vista.")
+                  )
+            )
+          )
+        )
+      );
+    }
+
+    function PartidosLiguillaSection({ clubs, matches, activeDivision, onSaveMatch, onDeleteMatch, onRegisterResult, onChangeDivision }) {
+      const [formOpen, setFormOpen] = useState(false);
+      const [editingMatch, setEditingMatch] = useState(null);
+      const divisionMatches = matches.filter((match) => match.division === activeDivision);
+      const grouped = divisionMatches.reduce((acc, match) => {
+        const group = match.grupo || "Sin Grupo";
+        acc[group] = acc[group] || [];
+        acc[group].push(match);
+        return acc;
+      }, {});
+
+      function handleSave(data) {
+        onSaveMatch(data);
+        setFormOpen(false);
+        setEditingMatch(null);
+      }
+
+      return React.createElement("div", null,
+        React.createElement("div", { className: "flex justify-between items-center mb-6" },
+          React.createElement("h2", { className: "text-2xl font-semibold text-gray-700 dark:text-slate-200" }, "Partidos de Liguilla"),
+          React.createElement("button", { onClick: () => { setEditingMatch(null); setFormOpen(true); }, className: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center text-sm" }, React.createElement(Icon.Plus, null), "Programar Partido Liguilla")
+        ),
+        React.createElement("div", { className: "flex flex-wrap gap-1 mb-4 border-b border-gray-300 dark:border-slate-700 pb-2" },
+          ALL_DIVISIONES.map((division) => React.createElement("button", {
+            key: division,
+            onClick: () => onChangeDivision(division),
+            className: `division-tab-liguilla px-3 py-1 rounded-md text-sm font-medium ${activeDivision === division ? "bg-blue-100 dark:bg-blue-600 text-blue-700 dark:text-white" : "text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700"}`,
+          }, division))
+        ),
+        formOpen && React.createElement(PartidoForm, { clubs, match: editingMatch, onCancel: () => { setFormOpen(false); setEditingMatch(null); }, onSave: handleSave, isLiguilla: true }),
+        Object.entries(grouped).length > 0
+          ? Object.entries(grouped).sort().map(([group, matches]) =>
+              React.createElement("div", { key: group, className: "bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden mb-6" },
+                React.createElement("h3", { className: "text-lg font-semibold text-gray-700 dark:text-slate-200 p-4 border-b border-gray-300 dark:border-slate-700" }, `Grupo ${group} - ${activeDivision}`),
+                React.createElement("div", { className: "overflow-x-auto" },
+                  React.createElement("table", { className: "min-w-full text-sm text-left text-gray-700 dark:text-slate-300" },
+                    React.createElement("thead", { className: "text-xs text-gray-700 dark:text-slate-400 uppercase bg-gray-100 dark:bg-slate-700" },
+                      React.createElement("tr", null,
+                        ["Fecha", "Hora", "Local", "Resultado", "Visitante", "División", "Estado", "Acciones"].map((col) => React.createElement("th", { key: col, className: "px-4 py-3" }, col))
+                      )
+                    ),
+                    React.createElement("tbody", null,
+                      matches.length > 0
+                        ? matches.map((match) => React.createElement(PartidoRow, { key: match.id, match, onEdit: () => { setEditingMatch(match); setFormOpen(true); }, onDelete: () => onDeleteMatch(match.id), onRegisterResult }))
+                        : React.createElement("tr", null,
+                            React.createElement("td", { colSpan: 8, className: "px-4 py-4 text-center text-gray-500 dark:text-slate-400" }, "No hay partidos programados para este grupo y división.")
+                          )
+                    )
+                  )
+                )
+              )
+            )
+          : React.createElement("p", { className: "text-gray-500 dark:text-slate-400 text-center" }, "Seleccione una división para ver los partidos de liguilla.")
+      );
+    }
+
+    function AdminLiguillaSection({ clubs, liguillaGroups, onAssignGroup, onRemoveGroup, onSaveGroups }) {
+      const availableClubs = clubs.filter((club) => !liguillaGroups[club.id]);
+      const groupAClubs = clubs.filter((club) => liguillaGroups[club.id] === "A");
+      const groupBClubs = clubs.filter((club) => liguillaGroups[club.id] === "B");
+      return React.createElement("div", null,
+        React.createElement("div", { className: "flex justify-between items-center mb-6" },
+          React.createElement("h2", { className: "text-2xl font-semibold text-gray-700 dark:text-slate-200" }, "Administración de Grupos de Liguilla"),
+          React.createElement("button", { onClick: onSaveGroups, className: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center text-sm" }, "Guardar Grupos")
+        ),
+        React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-6" },
+          renderGroupCard("Clubes Disponibles", availableClubs, ({ club }) => React.createElement("div", { className: "flex justify-between items-center text-sm border-b border-gray-300 dark:border-slate-700 pb-1 dark:text-slate-300" },
+            React.createElement("span", null, club.nombre),
+            React.createElement("div", { className: "space-x-1" },
+              React.createElement("button", { onClick: () => onAssignGroup(club.id, "A"), className: "assign-to-group-btn bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs hover:bg-green-200 dark:bg-green-800/50 dark:text-green-400 dark:hover:bg-green-700/70" }, "A"),
+              React.createElement("button", { onClick: () => onAssignGroup(club.id, "B"), className: "assign-to-group-btn bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-xs hover:bg-yellow-200 dark:bg-yellow-800/50 dark:text-yellow-400 dark:hover:bg-yellow-700/70" }, "B")
+            )
+          )),
+          renderGroupCard("Grupo A", groupAClubs, ({ club }) => React.createElement("div", { className: "flex justify-between items-center text-sm border-b border-gray-300 dark:border-slate-700 pb-1 dark:text-slate-300" }, React.createElement("span", null, club.nombre), React.createElement("button", { onClick: () => onRemoveGroup(club.id), className: "remove-from-group-btn bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/50 text-red-700 dark:text-red-400 text-xs font-medium p-1.5 rounded inline-flex items-center justify-center" }, React.createElement(Icon.Trash, null)))),
+          renderGroupCard("Grupo B", groupBClubs, ({ club }) => React.createElement("div", { className: "flex justify-between items-center text-sm border-b border-gray-300 dark:border-slate-700 pb-1 dark:text-slate-300" }, React.createElement("span", null, club.nombre), React.createElement("button", { onClick: () => onRemoveGroup(club.id), className: "remove-from-group-btn bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/50 text-red-700 dark:text-red-400 text-xs font-medium p-1.5 rounded inline-flex items-center justify-center" }, React.createElement(Icon.Trash, null))))
+        )
+      );
+    }
+
+    function renderGroupCard(title, clubs, renderItem) {
+      return React.createElement("div", { className: "bg-white dark:bg-slate-800 p-4 rounded-lg shadow-md" },
+        React.createElement("h3", { className: "text-lg font-semibold text-gray-700 dark:text-slate-200 mb-3 border-b border-gray-300 dark:border-slate-700 pb-2" }, title),
+        clubs.length > 0
+          ? React.createElement("ul", { className: "space-y-2" }, clubs.map((club) => React.createElement("li", { key: club.id }, renderItem({ club }))))
+          : React.createElement("p", { className: "text-sm text-gray-500 dark:text-slate-400 text-center" }, title === "Clubes Disponibles" ? "No hay clubes disponibles." : "Grupo vacío.")
+      );
+    }
+
+    function TablaLiguillaSection({ clubs, matches, groups, activeGroup, activeDivision, onChangeGroup, onChangeDivision }) {
+      const standingsData = useMemo(() => calculateStandings(matches, clubs, ALL_DIVISIONES, groups, true), [matches, clubs, groups]);
+      const currentData = standingsData[activeGroup]?.[activeDivision] || [];
+      return React.createElement("div", null,
+        React.createElement("div", { className: "flex justify-between items-center mb-4" },
+          React.createElement("h2", { className: "text-2xl font-semibold text-gray-700 dark:text-slate-200" }, "Tabla Liguilla"),
+          React.createElement("div", { className: "flex space-x-2" },
+            LIGUILLA_GROUPS.map((group) => React.createElement("button", {
+              key: group,
+              onClick: () => onChangeGroup(group),
+              className: `group-tab-liguilla-tabla px-3 py-1 rounded-md text-sm font-medium ${activeGroup === group ? "bg-blue-600 text-white" : "bg-white dark:bg-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-600 border border-gray-300 dark:border-slate-600"}`,
+            }, `Grupo ${group}`))
+          )
+        ),
+        React.createElement("div", { className: "flex flex-wrap gap-1 mb-4 border-b border-gray-300 dark:border-slate-700 pb-2" },
+          ALL_DIVISIONES.map((division) => React.createElement("button", {
+            key: division,
+            onClick: () => onChangeDivision(division),
+            className: `division-tab-liguilla-tabla px-3 py-1 rounded-md text-sm font-medium ${activeDivision === division ? "bg-blue-100 dark:bg-blue-600 text-blue-700 dark:text-white" : "text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700"}`,
+          }, division))
+        ),
+        React.createElement(StandingsTable, { standings: currentData, title: `Tabla Liguilla - Grupo ${activeGroup} - ${activeDivision}` })
+      );
+    }
+
+    function SuspensionesSection({ players, suspensions, clubs, onSaveSuspension, onDeleteSuspension }) {
+      const [filterClub, setFilterClub] = useState("all");
+      const [filterStatus, setFilterStatus] = useState("all");
+      const [searchTerm, setSearchTerm] = useState("");
+      const [formVisible, setFormVisible] = useState(false);
+      const [editingSuspension, setEditingSuspension] = useState(null);
+      const [form, setForm] = useState({
+        playerName: "",
+        playerId: "",
+        division: "",
+        fechaInicio: "",
+        tipo: "fechas",
+        duracionFechas: "",
+        duracionTiempoValor: "",
+        duracionTiempoUnidad: TIEMPO_UNITS[0],
+        motivo: "",
+      });
+
+      const filtered = suspensions.filter((s) => {
+        const matchSearch = s.playerName.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchClub = filterClub === "all" || s.clubName === filterClub;
+        const matchStatus = filterStatus === "all" || s.estado === filterStatus;
+        return matchSearch && matchClub && matchStatus;
+      });
+
+      function openForm(suspension = null) {
+        if (suspension) {
+          setEditingSuspension(suspension);
+          setForm({
+            ...suspension,
+            fechaInicio: formatDateToDDMMYYYY(suspension.fechaInicio),
+            duracionTiempoValor: suspension.duracionTiempo?.valor || "",
+            duracionTiempoUnidad: suspension.duracionTiempo?.unidad || TIEMPO_UNITS[0],
+          });
+        } else {
+          setEditingSuspension(null);
+          setForm({ playerName: "", playerId: "", division: "", fechaInicio: "", tipo: "fechas", duracionFechas: "", duracionTiempoValor: "", duracionTiempoUnidad: TIEMPO_UNITS[0], motivo: "" });
+        }
+        setFormVisible(true);
+      }
+
+      function handleSave(e) {
+        e.preventDefault();
+        const payload = {
+          ...editingSuspension,
+          ...form,
+          fechaInicio: formatDateForInput(form.fechaInicio),
+          duracionFechas: form.tipo === "fechas" ? Number(form.duracionFechas) : undefined,
+          duracionTiempo: form.tipo === "tiempo" ? { valor: Number(form.duracionTiempoValor), unidad: form.duracionTiempoUnidad } : undefined,
+          clubName: players.find((p) => p.id === form.playerId)?.club || "Desconocido",
+          estado: editingSuspension?.estado || "Activa",
+        };
+        if (!editingSuspension) payload.id = Date.now();
+        if (payload.tipo === "tiempo" && payload.duracionTiempo) {
+          payload.fechaTerminoCalculada = calculateEndDate(payload.fechaInicio, payload.duracionTiempo.valor, payload.duracionTiempo.unidad);
+        }
+        onSaveSuspension(payload);
+        setFormVisible(false);
+        setEditingSuspension(null);
+      }
+
+      function handlePlayerSelect(id, name, division) {
+        setForm({ ...form, playerId: id, playerName: name, division });
+      }
+
+      const suggestions = players.filter((p) => {
+        const q = form.playerName.toLowerCase();
+        return q.length > 1 && (`${p.nombres} ${p.apellidos}`.toLowerCase().includes(q) || p.cedula.includes(q));
+      });
+
+      return React.createElement("div", null,
+        React.createElement("div", { className: "flex flex-col sm:flex-row justify-between items-center mb-6 gap-4" },
+          React.createElement("h1", { className: "text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-slate-200" }, "Gestión de Suspensiones"),
+          React.createElement("button", { onClick: () => openForm(), className: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg w-full sm:w-auto transition-colors" }, React.createElement(Icon.Plus, null), "Nueva Suspensión")
+        ),
+        formVisible && React.createElement("div", { className: "mb-6" },
+          React.createElement("div", { className: "bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md border border-gray-300 dark:border-slate-700" },
+            React.createElement("form", { onSubmit: handleSave },
+              React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6" },
+                React.createElement("div", { className: "relative" },
+                  React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "playerName" }, "Jugador (Nombre o Cédula)"),
+                  React.createElement("input", {
+                    id: "playerName",
+                    type: "text",
+                    value: form.playerName,
+                    onChange: (e) => setForm({ ...form, playerName: e.target.value, playerId: "" }),
+                    placeholder: "Buscar jugador...",
+                    className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md",
+                    autoComplete: "off",
+                  }),
+                  suggestions.length > 0 && React.createElement("div", { className: "suggestions-list" },
+                    suggestions.slice(0, 6).map((player) => React.createElement("div", {
+                      key: player.id,
+                      className: "suggestion-item",
+                      onMouseDown: () => handlePlayerSelect(player.id, `${player.nombres} ${player.apellidos}`, player.division),
+                    }, `${player.nombres} ${player.apellidos} (${player.cedula}) - ${player.club}`))
+                  )
+                ),
+                React.createElement("div", null,
+                  React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "division" }, "División"),
+                  React.createElement("select", {
+                    id: "division",
+                    value: form.division,
+                    onChange: (e) => setForm({ ...form, division: e.target.value }),
+                    className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md",
+                  },
+                    React.createElement("option", { value: "" }, "Seleccionar división..."),
+                    ALL_DIVISIONES.map((division) => React.createElement("option", { key: division, value: division }, division))
+                  )
+                ),
+                renderPlayerInput("Fecha Inicio (DD-MM-AAAA)", "fechaInicio", form, setForm, "text", "DD-MM-AAAA"),
+                React.createElement("div", null,
+                  React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "tipo" }, "Tipo Suspensión"),
+                  React.createElement("select", {
+                    id: "tipo",
+                    value: form.tipo,
+                    onChange: (e) => setForm({ ...form, tipo: e.target.value }),
+                    className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md",
+                  },
+                    SUSPENSION_TYPES.map((type) => React.createElement("option", { key: type, value: type }, type.charAt(0).toUpperCase() + type.slice(1)))
+                  )
+                ),
+                form.tipo === "fechas" && React.createElement("div", null,
+                  React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "duracionFechas" }, "Nº Fechas"),
+                  React.createElement("input", {
+                    id: "duracionFechas",
+                    type: "number",
+                    min: "1",
+                    value: form.duracionFechas,
+                    onChange: (e) => setForm({ ...form, duracionFechas: e.target.value }),
+                    className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md",
+                  })
+                ),
+                form.tipo === "tiempo" && React.createElement("div", { className: "grid grid-cols-2 gap-2" },
+                  React.createElement("div", null,
+                    React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "duracionTiempoValor" }, "Duración"),
+                    React.createElement("input", {
+                      id: "duracionTiempoValor",
+                      type: "number",
+                      min: "1",
+                      value: form.duracionTiempoValor,
+                      onChange: (e) => setForm({ ...form, duracionTiempoValor: e.target.value }),
+                      className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md",
+                    })
+                  ),
+                  React.createElement("div", null,
+                    React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "duracionTiempoUnidad" }, "Unidad"),
+                    React.createElement("select", {
+                      id: "duracionTiempoUnidad",
+                      value: form.duracionTiempoUnidad,
+                      onChange: (e) => setForm({ ...form, duracionTiempoUnidad: e.target.value }),
+                      className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md",
+                    },
+                      TIEMPO_UNITS.map((unit) => React.createElement("option", { key: unit, value: unit }, unit))
+                    )
+                  )
+                ),
+                React.createElement("div", { className: "md:col-span-2" },
+                  React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "motivo" }, "Motivo"),
+                  React.createElement("textarea", {
+                    id: "motivo",
+                    value: form.motivo,
+                    onChange: (e) => setForm({ ...form, motivo: e.target.value }),
+                    rows: 3,
+                    className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md",
+                  })
+                ),
+                form.tipo === "tiempo" && React.createElement("div", { className: "md:col-span-2" },
+                  React.createElement("p", { className: "text-sm text-gray-500 dark:text-slate-400 mt-1" }, form.fechaInicio && form.duracionTiempoValor ? `Fecha de término calculada: ${formatDateForDisplay(calculateEndDate(formatDateForInput(form.fechaInicio), Number(form.duracionTiempoValor), form.duracionTiempoUnidad)) || "Inválida"}` : "")
+                )
+              ),
+              React.createElement("div", { className: "flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-300 dark:border-slate-700" },
+                React.createElement("button", { type: "button", onClick: () => { setFormVisible(false); setEditingSuspension(null); }, className: "bg-gray-200 dark:bg-slate-600 hover:bg-gray-300 dark:hover:bg-slate-500 text-gray-700 dark:text-slate-200 font-medium py-2 px-4 rounded-md" }, "Cancelar"),
+                React.createElement("button", { type: "submit", className: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md" }, editingSuspension ? "Guardar" : "Guardar")
+              )
+            )
+          )
+        )
+      ),
+        React.createElement("div", { className: "bg-white dark:bg-slate-800 p-4 mb-6 rounded-lg shadow-md border border-gray-300 dark:border-slate-700" },
+          React.createElement("div", { className: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" },
+            React.createElement("div", { className: "relative" },
+              React.createElement("span", { className: "absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" }, React.createElement(Icon.Search, null)),
+              React.createElement("input", {
+                type: "search",
+                placeholder: "Buscar jugador...",
+                value: searchTerm,
+                onChange: (e) => setSearchTerm(e.target.value),
+                className: "pl-10 w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-sky-500",
+              })
+            ),
+            React.createElement("select", {
+              className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-sky-500",
+              value: filterClub,
+              onChange: (e) => setFilterClub(e.target.value),
+            },
+              React.createElement("option", { value: "all" }, "Todos los clubes"),
+              clubs.map((club) => React.createElement("option", { key: club.id, value: club.nombre }, club.nombre))
+            ),
+            React.createElement("select", {
+              className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-sky-500",
+              value: filterStatus,
+              onChange: (e) => setFilterStatus(e.target.value),
+            },
+              ["all", "Activa", "Cumplida"].map((status) => React.createElement("option", { key: status, value: status }, status === "all" ? "Todos los estados" : status))
+            )
+          )
+        ),
+        React.createElement("div", { className: "bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-300 dark:border-slate-700" },
+          React.createElement("div", { className: "p-4 border-b border-gray-300 dark:border-slate-700" },
+            React.createElement("h2", { className: "text-lg font-semibold text-gray-900 dark:text-slate-200" }, "Listado de Suspensiones")
+          ),
+          React.createElement("div", { className: "p-4 overflow-x-auto max-h-[60vh]" },
+            React.createElement("table", { className: "w-full text-left" },
+              React.createElement("thead", { className: "bg-gray-50 dark:bg-slate-700 sticky top-0" },
+                React.createElement("tr", null,
+                  ["Jugador", "Club", "División", "Inicio", "Duración", "Estado", "Acciones"].map((label) => React.createElement("th", { key: label, className: "text-left py-3 px-4 text-sm font-medium text-gray-700 dark:text-slate-300" }, label))
+                )
+              ),
+              React.createElement("tbody", { className: "divide-y divide-gray-300 dark:divide-slate-700" },
+                filtered.length > 0
+                  ? filtered.map((suspension) => React.createElement("tr", { key: suspension.id, className: "bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700" },
+                      React.createElement("td", { className: "px-4 py-2 font-medium text-gray-900 dark:text-slate-200 whitespace-nowrap" }, suspension.playerName),
+                      React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, suspension.clubName),
+                      React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, suspension.division),
+                      React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, formatDateForDisplay(suspension.fechaInicio)),
+                      React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, suspension.tipo === "fechas" ? `${suspension.duracionFechas} fecha(s)` : `${suspension.duracionTiempo?.valor} ${suspension.duracionTiempo?.unidad}`),
+                      React.createElement("td", { className: "px-4 py-2" }, React.createElement("span", { className: suspension.estado === "Activa" ? "status-activa" : "status-cumplida" }, suspension.estado)),
+                      React.createElement("td", { className: "px-4 py-2 text-center space-x-1 whitespace-nowrap" },
+                        React.createElement("button", { onClick: () => alert(getSuspensionDetails(suspension)), className: "bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-300 text-xs font-medium p-1.5 rounded inline-flex items-center" }, React.createElement(Icon.Eye, null)),
+                        React.createElement("button", { onClick: () => openForm(suspension), className: "bg-yellow-100 dark:bg-yellow-700/30 hover:bg-yellow-200 dark:hover:bg-yellow-600/50 text-yellow-700 dark:text-yellow-400 text-xs font-medium p-1.5 rounded inline-flex items-center" }, React.createElement(Icon.Pencil, null)),
+                        React.createElement("button", { onClick: () => onDeleteSuspension(suspension.id), className: "bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/50 text-red-700 dark:text-red-400 text-xs font-medium p-1.5 rounded inline-flex items-center" }, React.createElement(Icon.Trash, null))
+                      )
+                    ))
+                  : React.createElement("tr", null,
+                      React.createElement("td", { colSpan: 7, className: "px-4 py-4 text-center text-gray-500 dark:text-slate-400" }, "No se encontraron suspensiones con los criterios actuales.")
+                    )
+              )
+            )
+          )
+        )
+      );
+    }
+
+    function getSuspensionDetails(suspension) {
+      const lines = [
+        `Jugador: ${suspension.playerName}`,
+        `Club: ${suspension.clubName}`,
+        `División: ${suspension.division}`,
+        `Fecha Inicio: ${formatDateForDisplay(suspension.fechaInicio)}`,
+        `Tipo: ${suspension.tipo.charAt(0).toUpperCase() + suspension.tipo.slice(1)}`,
+      ];
+      if (suspension.tipo === "fechas") {
+        lines.push(`Duración: ${suspension.duracionFechas} fecha(s)`);
+        lines.push(`Partidos cumplidos: ${suspension.partidosCumplidos || 0}`);
+      } else if (suspension.tipo === "tiempo") {
+        lines.push(`Duración: ${suspension.duracionTiempo.valor} ${suspension.duracionTiempo.unidad}`);
+        lines.push(`Fecha término: ${formatDateForDisplay(suspension.fechaTerminoCalculada)}`);
+      }
+      lines.push(`Estado: ${suspension.estado}`);
+      lines.push(`Motivo: ${suspension.motivo}`);
+      return lines.join("\n");
+    }
+
+    function ImportExportSection({ exportOptions, selectedImportFileName, onImportFileChange, onImportData, onExportData, onToggleExportOption }) {
+      return React.createElement("div", null,
+        React.createElement("h2", { className: "text-2xl font-semibold text-gray-700 dark:text-slate-200 mb-6" }, "Importar / Exportar Datos"),
+        React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6" },
+          React.createElement("div", { className: "bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md" },
+            React.createElement("h3", { className: "text-lg font-semibold text-gray-800 dark:text-slate-200 mb-3" }, "Importar Datos"),
+            React.createElement("p", { className: "text-sm text-gray-600 dark:text-slate-400 mb-4" }, "Importa datos de jugadores desde un archivo Excel o CSV."),
+            React.createElement("div", { className: "border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-6 text-center mb-4" },
+              React.createElement(Icon.Upload, null),
+              React.createElement("p", { className: "text-sm text-gray-500 dark:text-slate-400 mb-2" }, "Arrastra y suelta o"),
+              React.createElement("label", { className: "cursor-pointer bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded inline-flex items-center" }, "Seleccionar Archivo", React.createElement("input", { type: "file", id: "importFile", className: "hidden", accept: ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel", onChange: (e) => onImportFileChange(e.target.files[0]) })),
+              React.createElement("p", { className: "text-xs text-gray-500 dark:text-slate-400 mt-2" }, selectedImportFileName || "No se eligió ningún archivo")
+            ),
+            React.createElement("div", null,
+              React.createElement("h4", { className: "text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2" }, "Formato (Jugadores):"),
+              React.createElement("ol", { className: "list-decimal list-inside text-xs text-gray-600 dark:text-slate-400 space-y-1" },
+                ["Nombres", "Apellidos", "Cédula", "Fecha Nac. (DD-MM-AAAA)", "Fecha Oficio (DD-MM-AAAA)", "Fecha Ingreso (DD-MM-AAAA)", "Club", "División"].map((item) => React.createElement("li", { key: item }, item))
+              )
+            ),
+            React.createElement("button", { onClick: onImportData, disabled: !selectedImportFileName, className: `mt-4 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded inline-flex items-center justify-center ${!selectedImportFileName ? "opacity-50 cursor-not-allowed" : ""}` }, "Importar Archivo")
+          ),
+          React.createElement("div", { className: "bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md" },
+            React.createElement("h3", { className: "text-lg font-semibold text-gray-800 dark:text-slate-200 mb-3" }, "Exportar Datos"),
+            React.createElement("p", { className: "text-sm text-gray-600 dark:text-slate-400 mb-4" }, "Exporta datos a Excel."),
+            React.createElement("div", { className: "space-y-3" },
+              React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300" }, "Selecciona datos a exportar:"),
+              ["jugadores", "clubes", "tablaPosiciones", "suspensiones"].map((key) => React.createElement("div", { className: "flex items-center", key },
+                React.createElement("input", {
+                  id: `export-${key}`,
+                  name: key,
+                  type: "checkbox",
+                  checked: exportOptions[key],
+                  onChange: () => onToggleExportOption(key),
+                  className: "h-4 w-4 text-blue-600 border-gray-300 dark:border-slate-500 rounded focus:ring-blue-500 dark:focus:ring-sky-500 dark:ring-offset-slate-800 dark:bg-slate-700",
+                }),
+                React.createElement("label", { htmlFor: `export-${key}`, className: "ml-2 block text-sm text-gray-900 dark:text-slate-300 capitalize" }, key.replace(/([A-Z])/g, " $1").replace("tabla Posiciones", "Tabla de posiciones"))
+              ))
+            ),
+            React.createElement("button", { onClick: onExportData, className: "mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center justify-center" }, React.createElement(Icon.Download, null), "Exportar Datos")
+          )
+        )
+      );
+    }
+
+    function AdminUsuariosSection({ users, onSaveUser, onDeleteUser }) {
+      const [formVisible, setFormVisible] = useState(false);
+      const [editingUser, setEditingUser] = useState(null);
+      const [showPassword, setShowPassword] = useState(false);
+      const [form, setForm] = useState({ nombre: "", cedula: "", password: "", rol: USER_ROLES[1] });
+
+      useEffect(() => {
+        if (editingUser) {
+          setForm({ nombre: editingUser.nombre, cedula: editingUser.cedula, password: "", rol: editingUser.rol });
+          setShowPassword(false);
+          setFormVisible(true);
+        }
+      }, [editingUser]);
+
+      function handleSave(e) {
+        e.preventDefault();
+        const payload = { ...editingUser, ...form };
+        if (editingUser) {
+          if (!payload.password) delete payload.password;
+        }
+        onSaveUser(payload);
+        setFormVisible(false);
+        setEditingUser(null);
+      }
+
+      return React.createElement("div", null,
+        React.createElement("div", { className: "flex justify-between items-center mb-6" },
+          React.createElement("h2", { className: "text-2xl font-semibold text-gray-700 dark:text-slate-200" }, "Administración de Usuarios"),
+          React.createElement("button", { onClick: () => { setEditingUser(null); setForm({ nombre: "", cedula: "", password: "", rol: USER_ROLES[1] }); setFormVisible(true); }, className: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center text-sm" }, React.createElement(Icon.Plus, null), "Nuevo Usuario")
+        ),
+        formVisible && React.createElement("div", { className: "bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md mb-6" },
+          React.createElement("form", { onSubmit: handleSave },
+            React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4" },
+              renderUserInput("Nombre", "nombre", form, setForm),
+              renderUserInput("Cédula", "cedula", form, setForm, "text", "12345678-9", !!editingUser),
+              React.createElement("div", null,
+                React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "password" }, `Contraseña ${editingUser ? "(Dejar en blanco para no cambiar)" : ""}`),
+                React.createElement("div", { className: "relative" },
+                  React.createElement("input", {
+                    id: "password",
+                    type: showPassword ? "text" : "password",
+                    value: form.password,
+                    onChange: (e) => setForm({ ...form, password: e.target.value }),
+                    className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md pr-10",
+                  }),
+                  React.createElement("button", {
+                    type: "button",
+                    onClick: () => setShowPassword(!showPassword),
+                    className: "absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 dark:text-slate-400",
+                  }, React.createElement(Icon.Eye, null))
+                )
+              ),
+              React.createElement("div", null,
+                React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "rol" }, "Rol"),
+                React.createElement("select", {
+                  id: "rol",
+                  value: form.rol,
+                  onChange: (e) => setForm({ ...form, rol: e.target.value }),
+                  disabled: editingUser?.id === MASTER_ADMIN_ID,
+                  className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md",
+                },
+                  editingUser?.id === MASTER_ADMIN_ID
+                    ? React.createElement("option", { value: "Maestro" }, "Maestro")
+                    : USER_ROLES.map((rol) => React.createElement("option", { key: rol, value: rol }, rol))
+                ),
+                editingUser?.id === MASTER_ADMIN_ID && React.createElement("input", { type: "hidden", name: "rol", value: "Maestro" })
+              )
+            ),
+            React.createElement("div", { className: "flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-300 dark:border-slate-700" },
+              React.createElement("button", { type: "button", onClick: () => { setFormVisible(false); setEditingUser(null); }, className: "bg-gray-200 dark:bg-slate-600 hover:bg-gray-300 dark:hover:bg-slate-500 text-gray-700 dark:text-slate-200 font-medium py-2 px-4 rounded-md" }, "Cancelar"),
+              React.createElement("button", { type: "submit", className: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md" }, "Guardar Usuario")
+            )
+          )
+        ),
+        React.createElement("div", { className: "bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden" },
+          React.createElement("div", { className: "overflow-x-auto" },
+            React.createElement("table", { className: "min-w-full text-sm text-left text-gray-700 dark:text-slate-300" },
+              React.createElement("thead", { className: "text-xs text-gray-700 dark:text-slate-400 uppercase bg-gray-100 dark:bg-slate-700" },
+                React.createElement("tr", null,
+                  ["Nombre", "Cédula", "Rol", "Acciones"].map((col) => React.createElement("th", { key: col, className: "px-4 py-3" }, col))
+                )
+              ),
+              React.createElement("tbody", null,
+                users.filter((user) => user.id !== MASTER_ADMIN_ID).length > 0
+                  ? users.filter((user) => user.id !== MASTER_ADMIN_ID).map((user) => React.createElement("tr", { key: user.id, className: "bg-white dark:bg-slate-800 border-b border-gray-300 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700" },
+                      React.createElement("td", { className: "px-4 py-2 font-medium text-gray-900 dark:text-slate-200 whitespace-nowrap" }, user.nombre),
+                      React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, user.cedula),
+                      React.createElement("td", { className: "px-4 py-2 dark:text-slate-300" }, user.rol),
+                      React.createElement("td", { className: "px-4 py-2 text-center space-x-1 whitespace-nowrap" },
+                        React.createElement("button", { onClick: () => { setEditingUser(user); setFormVisible(true); }, className: "edit-user-btn bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-300 text-xs font-medium p-1.5 rounded inline-flex items-center justify-center" }, React.createElement(Icon.Pencil, null)),
+                        React.createElement("button", { onClick: () => onDeleteUser(user.id), className: "delete-user-btn bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/50 text-red-700 dark:text-red-400 text-xs font-medium p-1.5 rounded inline-flex items-center justify-center" }, React.createElement(Icon.Trash, null))
+                      )
+                    ))
+                  : React.createElement("tr", null,
+                      React.createElement("td", { colSpan: 4, className: "px-4 py-4 text-center text-gray-500 dark:text-slate-400" }, "No hay usuarios registrados.")
+                    )
+              )
+            )
+          )
+        )
+      );
+    }
+
+    function renderUserInput(label, name, form, setForm, type = "text", placeholder = "", disabled = false) {
+      return React.createElement("div", null,
+        React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: name }, label),
+        React.createElement("input", {
+          id: name,
+          type,
+          value: form[name] || "",
+          placeholder,
+          disabled,
+          onChange: (e) => setForm({ ...form, [name]: e.target.value }),
+          className: `w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md ${disabled ? "opacity-70 cursor-not-allowed" : ""}`,
+        })
+      );
+    }
+
+    function App() {
+      const [isAuthenticated, setAuthenticated] = useState(false);
+      const [currentUser, setCurrentUser] = useState(null);
+      const [loginError, setLoginError] = useState("");
+      const [activeSection, setActiveSection] = useState("inicio-section");
+      const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
+      const [isDarkMode, setDarkMode] = useLocalStorage("darkMode", false);
+      const [clubs, setClubs] = useState([...INITIAL_CLUBS]);
+      const [players, setPlayers] = useState([...INITIAL_PLAYERS]);
+      const [matches, setMatches] = useState([...INITIAL_MATCHES]);
+      const [liguillaMatches, setLiguillaMatches] = useState([...INITIAL_LIGUILLA_MATCHES]);
+      const [suspensions, setSuspensions] = useState([...INITIAL_SUSPENSIONS]);
+      const [users, setUsers] = useState([...INITIAL_USERS]);
+      const [liguillaGroups, setLiguillaGroups] = useState(() => {
+        const grouping = {};
+        INITIAL_LIGUILLA_MATCHES.forEach((match) => {
+          const local = groupsFind(match.local);
+          const visit = groupsFind(match.visitante);
+          if (local) grouping[local.id] = match.grupo;
+          if (visit) grouping[visit.id] = match.grupo;
+        });
+        INITIAL_CLUBS.forEach((club) => {
+          if (!grouping[club.id]) grouping[club.id] = null;
+        });
+        return grouping;
+      });
+      const [associationDetails, setAssociationDetails] = useState({ ...INITIAL_ASSOCIATION_DETAILS });
+      const [activeLiguillaDivisionTab, setActiveLiguillaDivisionTab] = useState(ALL_DIVISIONES.find((d) => d.includes("infantil")) || ALL_DIVISIONES[0]);
+      const [activeLiguillaGroupTab, setActiveLiguillaGroupTab] = useState(LIGUILLA_GROUPS[0]);
+      const [selectedImportFileName, setSelectedImportFileName] = useState("");
+      const [exportOptions, setExportOptions] = useState({ jugadores: false, clubes: false, tablaPosiciones: false, suspensiones: false });
+
+      useEffect(() => {
+        document.documentElement.classList.toggle("dark", isDarkMode);
+      }, [isDarkMode]);
+
+      function groupsFind(name) {
+        return INITIAL_CLUBS.find((club) => club.nombre === name);
+      }
+
+      function handleLogin(cedula, password) {
+        const user = users.find((u) => u.cedula === cedula);
+        if (user && user.password === password) {
+          setAuthenticated(true);
+          setCurrentUser(user);
+          setLoginError("");
+          setActiveSection("inicio-section");
+        } else {
+          setLoginError("Cédula o contraseña incorrecta.");
+        }
+      }
+
+      function handleLogout() {
+        setAuthenticated(false);
+        setCurrentUser(null);
+        setActiveSection("inicio-section");
+      }
+
+      function handleSaveClub(club) {
+        if (club.id) {
+          setClubs((prev) => prev.map((item) => (item.id === club.id ? { ...item, ...club } : item)));
+        } else {
+          setClubs((prev) => [...prev, { ...club, id: prev.length + 1 }]);
+        }
+      }
+
+      function handleDeleteClub(id) {
+        setClubs((prev) => prev.filter((club) => club.id !== id));
+      }
+
+      function handleSavePlayer(player) {
+        if (players.some((p) => p.id === player.id)) {
+          setPlayers((prev) => prev.map((item) => (item.id === player.id ? { ...item, ...player } : item)));
+        } else {
+          setPlayers((prev) => [...prev, { ...player, id: player.cedula }]);
+        }
+      }
+
+      function handleDeletePlayer(playerId) {
+        setPlayers((prev) => prev.filter((player) => player.id !== playerId));
+      }
+
+      function handleSaveMatch(match) {
+        if (match.id) {
+          setMatches((prev) => prev.map((item) => (item.id === match.id ? { ...item, ...match } : item)));
+        } else {
+          setMatches((prev) => [...prev, { ...match, id: Date.now(), estado: "Pendiente", resultado: "" }]);
+        }
+      }
+
+      function handleDeleteMatch(id) {
+        setMatches((prev) => prev.filter((match) => match.id !== id));
+      }
+
+      function handleRegisterResult(matchId) {
+        const localScore = Number(document.querySelector(`.result-input.local-score[data-match-id=\"${matchId}\"]`)?.value);
+        const visitorScore = Number(document.querySelector(`.result-input.visitor-score[data-match-id=\"${matchId}\"]`)?.value);
+        if (Number.isNaN(localScore) || Number.isNaN(visitorScore)) return;
+        setMatches((prev) => prev.map((match) => (match.id === matchId ? { ...match, resultado: `${localScore}-${visitorScore}`, estado: "Finalizado" } : match)));
+      }
+
+      function handleSaveLiguillaMatch(match) {
+        if (match.id) {
+          setLiguillaMatches((prev) => prev.map((item) => (item.id === match.id ? { ...item, ...match } : item)));
+        } else {
+          setLiguillaMatches((prev) => [...prev, { ...match, id: Date.now() + 100000, estado: "Pendiente", resultado: "" }]);
+        }
+      }
+
+      function handleDeleteLiguillaMatch(id) {
+        setLiguillaMatches((prev) => prev.filter((match) => match.id !== id));
+      }
+
+      function handleRegisterLiguillaResult(matchId) {
+        const localScore = Number(document.querySelector(`#root .result-input.local-score[data-match-id=\"${matchId}\"]`)?.value);
+        const visitorScore = Number(document.querySelector(`#root .result-input.visitor-score[data-match-id=\"${matchId}\"]`)?.value);
+        if (Number.isNaN(localScore) || Number.isNaN(visitorScore)) return;
+        setLiguillaMatches((prev) => prev.map((match) => (match.id === matchId ? { ...match, resultado: `${localScore}-${visitorScore}`, estado: "Completado" } : match)));
+      }
+
+      function handleAssignClubToGroup(clubId, group) {
+        setLiguillaGroups((prev) => ({ ...prev, [clubId]: group }));
+      }
+
+      function handleRemoveClubFromGroup(clubId) {
+        setLiguillaGroups((prev) => ({ ...prev, [clubId]: null }));
+      }
+
+      function handleSaveLiguillaGroups() {
+        alert("Grupos de liguilla guardados (simulado).\n" + JSON.stringify(liguillaGroups, null, 2));
+      }
+
+      function handleSaveSuspension(suspension) {
+        if (suspension.id && suspensions.some((s) => s.id === suspension.id)) {
+          setSuspensions((prev) => prev.map((item) => (item.id === suspension.id ? suspension : item)));
+        } else {
+          setSuspensions((prev) => [...prev, suspension]);
+        }
+      }
+
+      function handleDeleteSuspension(id) {
+        setSuspensions((prev) => prev.filter((s) => s.id !== id));
+      }
+
+      function handleImportFileChange(file) {
+        setSelectedImportFileName(file ? file.name : "");
+      }
+
+      function handleImportData() {
+        alert(`Importar archivo \"${selectedImportFileName}\" (Funcionalidad no implementada).`);
+      }
+
+      function handleExportData() {
+        const selected = Object.entries(exportOptions).filter(([_, value]) => value).map(([key]) => key);
+        if (selected.length === 0) {
+          alert("Selecciona datos para exportar.");
+          return;
+        }
+        alert(`Exportando: ${selected.join(", ")} (Funcionalidad no implementada)`);
+      }
+
+      function toggleExportOption(key) {
+        setExportOptions((prev) => ({ ...prev, [key]: !prev[key] }));
+      }
+
+      function handleSaveUser(user) {
+        if (user.id && users.some((u) => u.id === user.id)) {
+          setUsers((prev) => prev.map((item) => (item.id === user.id ? { ...item, ...user, password: user.password || item.password } : item)));
+        } else {
+          setUsers((prev) => [...prev, { ...user, id: user.cedula }]);
+        }
+      }
+
+      function handleDeleteUser(userId) {
+        if (userId === MASTER_ADMIN_ID) {
+          alert("No se puede eliminar al Admin Maestro.");
+          return;
+        }
+        setUsers((prev) => prev.filter((user) => user.id !== userId));
+      }
+
+      function handleSaveAssociation(newDetails) {
+        setAssociationDetails(newDetails);
+      }
+
+      return isAuthenticated
+        ? React.createElement("div", { className: "flex h-screen" },
+            React.createElement(Sidebar, {
+              activeSection,
+              collapsed: isSidebarCollapsed,
+              onToggle: () => setSidebarCollapsed(!isSidebarCollapsed),
+              onNavigate: (section) => {
+                if (section === "logout") {
+                  handleLogout();
+                } else {
+                  setActiveSection(section);
+                }
+              },
+              associationDetails,
+            }),
+            React.createElement("div", { className: "flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-slate-900" },
+              React.createElement(Header, { user: currentUser, darkMode: isDarkMode, onToggleDarkMode: () => setDarkMode(!isDarkMode) }),
+              React.createElement("main", { className: "flex-1 overflow-x-hidden overflow-y-auto p-6" },
+                React.createElement(RenderSection, {
+                  sectionId: activeSection,
+                  appState: {
+                    matches,
+                    clubs,
+                    players,
+                    liguillaMatches,
+                    suspensions,
+                    users,
+                    associationDetails,
+                    liguillaGroups,
+                    activeLiguillaDivisionTab,
+                    activeLiguillaGroupTab,
+                    selectedImportFileName,
+                    exportOptions,
+                  },
+                  actions: {
+                    saveAssociation: handleSaveAssociation,
+                    saveClub: handleSaveClub,
+                    deleteClub: handleDeleteClub,
+                    savePlayer: handleSavePlayer,
+                    deletePlayer: handleDeletePlayer,
+                    saveMatch: handleSaveMatch,
+                    deleteMatch: handleDeleteMatch,
+                    registerResult: handleRegisterResult,
+                    saveLiguillaMatch: handleSaveLiguillaMatch,
+                    deleteLiguillaMatch: handleDeleteLiguillaMatch,
+                    registerLiguillaResult: handleRegisterLiguillaResult,
+                    assignClubToGroup: handleAssignClubToGroup,
+                    removeClubFromGroup: handleRemoveClubFromGroup,
+                    saveLiguillaGroups: handleSaveLiguillaGroups,
+                    setLiguillaDivisionTab: setActiveLiguillaDivisionTab,
+                    setLiguillaGroupTab: setActiveLiguillaGroupTab,
+                    saveSuspension: handleSaveSuspension,
+                    deleteSuspension: handleDeleteSuspension,
+                    setImportFileName: (file) => handleImportFileChange(file),
+                    importData: handleImportData,
+                    exportData: handleExportData,
+                    toggleExportOption,
+                    saveUser: handleSaveUser,
+                    deleteUser: handleDeleteUser,
+                  },
+                })
+              )
+            )
+          )
+        : React.createElement(LoginScreen, { onLogin: handleLogin, error: loginError, associationDetails });
+    }
+
+    function LoginScreen({ onLogin, error, associationDetails }) {
+      const [cedula, setCedula] = useState("");
+      const [password, setPassword] = useState("");
+      return React.createElement("div", { className: "flex items-center justify-center min-h-screen bg-gray-100 dark:bg-slate-900" },
+        React.createElement("div", { className: "bg-white dark:bg-slate-800 p-8 rounded-lg shadow-md w-full max-w-sm" },
+          React.createElement("img", {
+            src: associationDetails.logoUrl,
+            alt: "Logo Asociación",
+            className: "mx-auto mb-4 h-36 w-auto object-contain",
+            onError: (e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "https://placehold.co/144x144/cccccc/ffffff?text=Logo";
+            },
+          }),
+          React.createElement("h2", { className: "text-2xl font-bold text-center mb-6 text-gray-800 dark:text-slate-200" }, "Bienvenido"),
+          error && React.createElement("p", { className: "text-red-500 text-sm text-center mb-4" }, error),
+          React.createElement("form", {
+            onSubmit: (e) => {
+              e.preventDefault();
+              onLogin(cedula, password);
+            },
+          },
+            React.createElement("div", { className: "mb-4" },
+              React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "loginCedula" }, "Cédula"),
+              React.createElement("input", {
+                id: "loginCedula",
+                value: cedula,
+                onChange: (e) => setCedula(e.target.value),
+                required: true,
+                placeholder: "12345678-9",
+                className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
+              })
+            ),
+            React.createElement("div", { className: "mb-6" },
+              React.createElement("label", { className: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1", htmlFor: "loginPassword" }, "Contraseña"),
+              React.createElement("input", {
+                id: "loginPassword",
+                type: "password",
+                value: password,
+                onChange: (e) => setPassword(e.target.value),
+                required: true,
+                className: "w-full px-3 py-2 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500",
+              })
+            ),
+            React.createElement("button", { type: "submit", className: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" }, "Iniciar Sesión")
+          )
+        )
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+  </script>
+</body>
+</html>
