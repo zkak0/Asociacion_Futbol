@@ -1,47 +1,459 @@
 {
   "users": [
-    { "id": "16776631-5", "nombre": "Admin Maestro", "cedula": "16776631-5", "rol": "Administrador", "password": "WIZARDS" },
-    { "id": "11111111-1", "nombre": "Juan Perez", "cedula": "11111111-1", "rol": "Administrador", "password": "password123" },
-    { "id": "22222222-2", "nombre": "Maria Soto", "cedula": "22222222-2", "rol": "Usuario", "password": "password456" }
+    {
+      "id": "16776631-5",
+      "nombre": "Admin Maestro",
+      "cedula": "16776631-5",
+      "rol": "Administrador",
+      "password": "WIZARDS"
+    },
+    {
+      "id": "11111111-1",
+      "nombre": "Juan Perez",
+      "cedula": "11111111-1",
+      "rol": "Administrador",
+      "password": "password123"
+    },
+    {
+      "id": "22222222-2",
+      "nombre": "Maria Soto",
+      "cedula": "22222222-2",
+      "rol": "Usuario",
+      "password": "password456"
+    }
   ],
   "clubs": [
-    { "id": 1, "nombre": "Alejandro Navarrete", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] },
-    { "id": 2, "nombre": "Estrella del Janequeo", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] },
-    { "id": 3, "nombre": "Botafogo", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] },
-    { "id": 4, "nombre": "Real Chile", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] },
-    { "id": 5, "nombre": "Victoria de Chile", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] },
-    { "id": 6, "nombre": "Flecha Verde", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] },
-    { "id": 7, "nombre": "Juan Carlos Peña", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] },
-    { "id": 8, "nombre": "Quinto Sector", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] },
-    { "id": 9, "nombre": "Tres Estrellas", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] },
-    { "id": 10, "nombre": "Atlantic Reefer", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] },
-    { "id": 11, "nombre": "Reñaca Bajo", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] },
-    { "id": 12, "nombre": "Corporacion Everton", "presidente": "", "tesorero": "", "secretario": "", "email": "", "divisiones": ["cuarta infantil", "tercera infantil", "segunda infantil", "primera infantil", "tercera adulto", "segunda adulto", "primera adulto", "senior", "super senior", "viejos tercios", "division femenina"] }
+    {
+      "id": 2,
+      "nombre": "Estrella del Janequeo",
+      "presidente": "",
+      "tesorero": "",
+      "secretario": "",
+      "email": "",
+      "divisiones": [
+        "cuarta infantil",
+        "tercera infantil",
+        "segunda infantil",
+        "primera infantil",
+        "tercera adulto",
+        "segunda adulto",
+        "primera adulto",
+        "senior",
+        "super senior",
+        "viejos tercios",
+        "division femenina"
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "Botafogo",
+      "presidente": "",
+      "tesorero": "",
+      "secretario": "",
+      "email": "",
+      "divisiones": [
+        "cuarta infantil",
+        "tercera infantil",
+        "segunda infantil",
+        "primera infantil",
+        "tercera adulto",
+        "segunda adulto",
+        "primera adulto",
+        "senior",
+        "super senior",
+        "viejos tercios",
+        "division femenina"
+      ]
+    },
+    {
+      "id": 4,
+      "nombre": "Real Chile",
+      "presidente": "",
+      "tesorero": "",
+      "secretario": "",
+      "email": "",
+      "divisiones": [
+        "cuarta infantil",
+        "tercera infantil",
+        "segunda infantil",
+        "primera infantil",
+        "tercera adulto",
+        "segunda adulto",
+        "primera adulto",
+        "senior",
+        "super senior",
+        "viejos tercios",
+        "division femenina"
+      ]
+    },
+    {
+      "id": 5,
+      "nombre": "Victoria de Chile",
+      "presidente": "",
+      "tesorero": "",
+      "secretario": "",
+      "email": "",
+      "divisiones": [
+        "cuarta infantil",
+        "tercera infantil",
+        "segunda infantil",
+        "primera infantil",
+        "tercera adulto",
+        "segunda adulto",
+        "primera adulto",
+        "senior",
+        "super senior",
+        "viejos tercios",
+        "division femenina"
+      ]
+    },
+    {
+      "id": 6,
+      "nombre": "Flecha Verde",
+      "presidente": "",
+      "tesorero": "",
+      "secretario": "",
+      "email": "",
+      "divisiones": [
+        "cuarta infantil",
+        "tercera infantil",
+        "segunda infantil",
+        "primera infantil",
+        "tercera adulto",
+        "segunda adulto",
+        "primera adulto",
+        "senior",
+        "super senior",
+        "viejos tercios",
+        "division femenina"
+      ]
+    },
+    {
+      "id": 7,
+      "nombre": "Juan Carlos Peña",
+      "presidente": "",
+      "tesorero": "",
+      "secretario": "",
+      "email": "",
+      "divisiones": [
+        "cuarta infantil",
+        "tercera infantil",
+        "segunda infantil",
+        "primera infantil",
+        "tercera adulto",
+        "segunda adulto",
+        "primera adulto",
+        "senior",
+        "super senior",
+        "viejos tercios",
+        "division femenina"
+      ]
+    },
+    {
+      "id": 8,
+      "nombre": "Quinto Sector",
+      "presidente": "",
+      "tesorero": "",
+      "secretario": "",
+      "email": "",
+      "divisiones": [
+        "cuarta infantil",
+        "tercera infantil",
+        "segunda infantil",
+        "primera infantil",
+        "tercera adulto",
+        "segunda adulto",
+        "primera adulto",
+        "senior",
+        "super senior",
+        "viejos tercios",
+        "division femenina"
+      ]
+    },
+    {
+      "id": 9,
+      "nombre": "Tres Estrellas",
+      "presidente": "",
+      "tesorero": "",
+      "secretario": "",
+      "email": "",
+      "divisiones": [
+        "cuarta infantil",
+        "tercera infantil",
+        "segunda infantil",
+        "primera infantil",
+        "tercera adulto",
+        "segunda adulto",
+        "primera adulto",
+        "senior",
+        "super senior",
+        "viejos tercios",
+        "division femenina"
+      ]
+    },
+    {
+      "id": 10,
+      "nombre": "Atlantic Reefer",
+      "presidente": "",
+      "tesorero": "",
+      "secretario": "",
+      "email": "",
+      "divisiones": [
+        "cuarta infantil",
+        "tercera infantil",
+        "segunda infantil",
+        "primera infantil",
+        "tercera adulto",
+        "segunda adulto",
+        "primera adulto",
+        "senior",
+        "super senior",
+        "viejos tercios",
+        "division femenina"
+      ]
+    },
+    {
+      "id": 11,
+      "nombre": "Reñaca Bajo",
+      "presidente": "",
+      "tesorero": "",
+      "secretario": "",
+      "email": "",
+      "divisiones": [
+        "cuarta infantil",
+        "tercera infantil",
+        "segunda infantil",
+        "primera infantil",
+        "tercera adulto",
+        "segunda adulto",
+        "primera adulto",
+        "senior",
+        "super senior",
+        "viejos tercios",
+        "division femenina"
+      ]
+    },
+    {
+      "id": 12,
+      "nombre": "Corporacion Everton",
+      "presidente": "",
+      "tesorero": "",
+      "secretario": "",
+      "email": "",
+      "divisiones": [
+        "cuarta infantil",
+        "tercera infantil",
+        "segunda infantil",
+        "primera infantil",
+        "tercera adulto",
+        "segunda adulto",
+        "primera adulto",
+        "senior",
+        "super senior",
+        "viejos tercios",
+        "division femenina"
+      ]
+    }
   ],
   "players": [
-    { "id": "12345678-9", "nombres": "Carlos", "apellidos": "Rodriguez", "cedula": "12345678-9", "club": "Alejandro Navarrete", "division": "cuarta infantil", "fechaNac": "1995-05-15", "fechaOficio": "2025-01-15", "fechaIngreso": "2025-01-20", "estado": "Activo" },
-    { "id": "98765432-1", "nombres": "Diego", "apellidos": "Sanchez", "cedula": "98765432-1", "club": "Estrella del Janequeo", "division": "tercera infantil", "fechaNac": "1998-03-22", "fechaOficio": "2025-02-01", "fechaIngreso": "2025-02-05", "estado": "Activo" },
-    { "id": "11223344-5", "nombres": "Ana", "apellidos": "Gomez", "cedula": "11223344-5", "club": "Botafogo", "division": "primera adulto", "fechaNac": "1990-11-10", "fechaOficio": "2025-01-10", "fechaIngreso": "2025-01-15", "estado": "Activo" },
-    { "id": "55667788-9", "nombres": "Luis", "apellidos": "Perez", "cedula": "55667788-9", "club": "Alejandro Navarrete", "division": "senior", "fechaNac": "1980-01-01", "fechaOficio": "2025-03-01", "fechaIngreso": "2025-03-02", "estado": "Activo" }
+    {
+      "id": "12345678-9",
+      "nombres": "Carlos",
+      "apellidos": "Rodriguez",
+      "cedula": "12345678-9",
+      "club": "Alejandro Navarrete",
+      "division": "cuarta infantil",
+      "fechaNac": "1995-05-15",
+      "fechaOficio": "2025-01-15",
+      "fechaIngreso": "2025-01-20",
+      "estado": "Activo"
+    },
+    {
+      "id": "98765432-1",
+      "nombres": "Diego",
+      "apellidos": "Sanchez",
+      "cedula": "98765432-1",
+      "club": "Estrella del Janequeo",
+      "division": "tercera infantil",
+      "fechaNac": "1998-03-22",
+      "fechaOficio": "2025-02-01",
+      "fechaIngreso": "2025-02-05",
+      "estado": "Activo"
+    },
+    {
+      "id": "11223344-5",
+      "nombres": "Ana",
+      "apellidos": "Gomez",
+      "cedula": "11223344-5",
+      "club": "Botafogo",
+      "division": "primera adulto",
+      "fechaNac": "1990-11-10",
+      "fechaOficio": "2025-01-10",
+      "fechaIngreso": "2025-01-15",
+      "estado": "Activo"
+    },
+    {
+      "id": "55667788-9",
+      "nombres": "Luis",
+      "apellidos": "Perez",
+      "cedula": "55667788-9",
+      "club": "Alejandro Navarrete",
+      "division": "senior",
+      "fechaNac": "1980-01-01",
+      "fechaOficio": "2025-03-01",
+      "fechaIngreso": "2025-03-02",
+      "estado": "Activo"
+    }
   ],
   "matches": [
-    { "id": 1714316160000, "fecha": "2025-04-29", "hora": "19:30", "local": "Botafogo", "visitante": "Reñaca Bajo", "division": "cuarta infantil", "resultado": "1-1", "estado": "Finalizado" },
-    { "id": 1714316160001, "fecha": "2025-04-30", "hora": "15:00", "local": "Alejandro Navarrete", "visitante": "Tres Estrellas", "division": "senior", "resultado": "2-1", "estado": "Finalizado" },
-    { "id": 1714402560000, "fecha": "2025-05-01", "hora": "10:00", "local": "Victoria de Chile", "visitante": "Flecha Verde", "division": "tercera adulto", "resultado": "0-3", "estado": "Finalizado" },
-    { "id": 1714488960000, "fecha": "2025-05-01", "hora": "11:30", "local": "Alejandro Navarrete", "visitante": "Botafogo", "division": "segunda infantil", "resultado": "", "estado": "Pendiente" },
-    { "id": 1714575360000, "fecha": "2025-05-02", "hora": "16:00", "local": "Real Chile", "visitante": "Quinto Sector", "division": "cuarta infantil", "resultado": "", "estado": "Pendiente" },
-    { "id": 1714575360001, "fecha": "2025-05-02", "hora": "17:30", "local": "Estrella del Janequeo", "visitante": "Corporacion Everton", "division": "senior", "resultado": "3-3", "estado": "Finalizado" }
+    {
+      "id": 1714316160000,
+      "fecha": "2025-04-29",
+      "hora": "19:30",
+      "local": "Botafogo",
+      "visitante": "Reñaca Bajo",
+      "division": "cuarta infantil",
+      "resultado": "1-1",
+      "estado": "Finalizado"
+    },
+    {
+      "id": 1714316160001,
+      "fecha": "2025-04-30",
+      "hora": "15:00",
+      "local": "Alejandro Navarrete",
+      "visitante": "Tres Estrellas",
+      "division": "senior",
+      "resultado": "2-1",
+      "estado": "Finalizado"
+    },
+    {
+      "id": 1714402560000,
+      "fecha": "2025-05-01",
+      "hora": "10:00",
+      "local": "Victoria de Chile",
+      "visitante": "Flecha Verde",
+      "division": "tercera adulto",
+      "resultado": "0-3",
+      "estado": "Finalizado"
+    },
+    {
+      "id": 1714488960000,
+      "fecha": "2025-05-01",
+      "hora": "11:30",
+      "local": "Alejandro Navarrete",
+      "visitante": "Botafogo",
+      "division": "segunda infantil",
+      "resultado": "",
+      "estado": "Pendiente"
+    },
+    {
+      "id": 1714575360000,
+      "fecha": "2025-05-02",
+      "hora": "16:00",
+      "local": "Real Chile",
+      "visitante": "Quinto Sector",
+      "division": "cuarta infantil",
+      "resultado": "",
+      "estado": "Pendiente"
+    },
+    {
+      "id": 1714575360001,
+      "fecha": "2025-05-02",
+      "hora": "17:30",
+      "local": "Estrella del Janequeo",
+      "visitante": "Corporacion Everton",
+      "division": "senior",
+      "resultado": "3-3",
+      "estado": "Finalizado"
+    }
   ],
   "liguillaMatches": [
-    { "id": 2000000000001, "fecha": "2025-04-27", "hora": "14:30", "local": "Alejandro Navarrete", "visitante": "Botafogo", "division": "segunda infantil", "resultado": "3-1", "estado": "Completado", "grupo": "A" },
-    { "id": 2000000000002, "fecha": "2025-04-28", "hora": "11:10", "local": "Atlantic Reefer", "visitante": "Flecha Verde", "division": "segunda infantil", "resultado": "1-0", "estado": "Completado", "grupo": "A" },
-    { "id": 2000000000003, "fecha": "2025-05-04", "hora": "10:00", "local": "Real Chile", "visitante": "Estrella del Janequeo", "division": "senior", "resultado": "2-2", "estado": "Completado", "grupo": "B" },
-    { "id": 2000000000004, "fecha": "2025-05-04", "hora": "12:00", "local": "Victoria de Chile", "visitante": "Juan Carlos Peña", "division": "senior", "resultado": "1-0", "estado": "Completado", "grupo": "B" },
-    { "id": 2000000000005, "fecha": "2025-05-05", "hora": "15:00", "local": "Botafogo", "visitante": "Atlantic Reefer", "division": "segunda infantil", "resultado": "", "estado": "Pendiente", "grupo": "A" }
+    {
+      "id": 2000000000001,
+      "fecha": "2025-04-27",
+      "hora": "14:30",
+      "local": "Alejandro Navarrete",
+      "visitante": "Botafogo",
+      "division": "segunda infantil",
+      "resultado": "3-1",
+      "estado": "Completado",
+      "grupo": "A"
+    },
+    {
+      "id": 2000000000002,
+      "fecha": "2025-04-28",
+      "hora": "11:10",
+      "local": "Atlantic Reefer",
+      "visitante": "Flecha Verde",
+      "division": "segunda infantil",
+      "resultado": "1-0",
+      "estado": "Completado",
+      "grupo": "A"
+    },
+    {
+      "id": 2000000000003,
+      "fecha": "2025-05-04",
+      "hora": "10:00",
+      "local": "Real Chile",
+      "visitante": "Estrella del Janequeo",
+      "division": "senior",
+      "resultado": "2-2",
+      "estado": "Completado",
+      "grupo": "B"
+    },
+    {
+      "id": 2000000000004,
+      "fecha": "2025-05-04",
+      "hora": "12:00",
+      "local": "Victoria de Chile",
+      "visitante": "Juan Carlos Peña",
+      "division": "senior",
+      "resultado": "1-0",
+      "estado": "Completado",
+      "grupo": "B"
+    },
+    {
+      "id": 2000000000005,
+      "fecha": "2025-05-05",
+      "hora": "15:00",
+      "local": "Botafogo",
+      "visitante": "Atlantic Reefer",
+      "division": "segunda infantil",
+      "resultado": "",
+      "estado": "Pendiente",
+      "grupo": "A"
+    }
   ],
   "suspensions": [
-    { "id": 1, "playerId": "12345678-9", "playerName": "Carlos Rodriguez", "clubName": "Alejandro Navarrete", "division": "cuarta infantil", "fechaInicio": "2025-04-29", "tipo": "fechas", "duracionFechas": 4, "partidosCumplidos": 1, "motivo": "Tarjeta Roja Directa", "estado": "Activa" },
-    { "id": 2, "playerId": "11223344-5", "playerName": "Ana Gomez", "clubName": "Botafogo", "division": "primera adulto", "fechaInicio": "2025-04-15", "tipo": "tiempo", "duracionTiempo": { "valor": 2, "unidad": "meses" }, "fechaTerminoCalculada": "2025-06-15", "motivo": "Acumulación Tarjetas Amarillas", "estado": "Activa" }
+    {
+      "id": 1,
+      "playerId": "12345678-9",
+      "playerName": "Carlos Rodriguez",
+      "clubName": "Alejandro Navarrete",
+      "division": "cuarta infantil",
+      "fechaInicio": "2025-04-29",
+      "tipo": "fechas",
+      "duracionFechas": 4,
+      "partidosCumplidos": 1,
+      "motivo": "Tarjeta Roja Directa",
+      "estado": "Activa"
+    },
+    {
+      "id": 2,
+      "playerId": "11223344-5",
+      "playerName": "Ana Gomez",
+      "clubName": "Botafogo",
+      "division": "primera adulto",
+      "fechaInicio": "2025-04-15",
+      "tipo": "tiempo",
+      "duracionTiempo": {
+        "valor": 2,
+        "unidad": "meses"
+      },
+      "fechaTerminoCalculada": "2025-06-15",
+      "motivo": "Acumulación Tarjetas Amarillas",
+      "estado": "Activa"
+    }
   ],
   "association": [
     {
