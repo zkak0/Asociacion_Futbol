@@ -303,7 +303,7 @@ function Sidebar({ activeSection, collapsed, onToggle, onNavigate, associationDe
     { id: "admin-liguilla", label: "Admin. Liguilla" },
     { id: "suspensiones", label: "Suspensiones" },
     { id: "import-export", label: "Importar / Exportar" },
-    { id: "admin-usuarios", label: "Admin. Usuarios" },
+    { id: "admin-usuarios", label: "Administración" },
   ];
 
   return (
