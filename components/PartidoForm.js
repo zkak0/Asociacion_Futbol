@@ -10,11 +10,12 @@ export default function PartidoForm({ clubs, match, onCancel, onSave, isLiguilla
     local: match?.local || "",
     visitante: match?.visitante || "",
     division: match?.division || "",
+    jornada: match?.jornada || "",
     grupo: match?.grupo || (liguillaGroups ? liguillaGroups[0] : "A"),
   });
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <div className="rounded-2xl border border-slate-200 bg-white/90 backdrop-blur-xl p-4 shadow-xl dark:border-slate-700 dark:bg-slate-900">
       <h3 className="mb-3 text-lg font-semibold text-slate-900 dark:text-slate-100">
         {match ? `Editar partido${isLiguilla ? " de liguilla" : ""}` : `Programar partido${isLiguilla ? " de liguilla" : ""}`}
       </h3>
@@ -31,22 +32,33 @@ export default function PartidoForm({ clubs, match, onCancel, onSave, isLiguilla
         }}
         className="grid gap-3 lg:grid-cols-2"
       >
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-          Fecha
-          <input
-            value={form.fecha}
-            onChange={(e) => setForm({ ...form, fecha: e.target.value })}
-            placeholder="DD-MM-AAAA"
-            className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-          />
-        </label>
+        <div className="grid grid-cols-2 gap-3 lg:col-span-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Jornada
+            <input
+              value={form.jornada}
+              onChange={(e) => setForm({ ...form, jornada: e.target.value })}
+              placeholder="Ej: 1 o Final"
+              className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            />
+          </label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Fecha
+            <input
+              value={form.fecha}
+              onChange={(e) => setForm({ ...form, fecha: e.target.value })}
+              placeholder="DD-MM-AAAA"
+              className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            />
+          </label>
+        </div>
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           Hora
           <input
             type="time"
             value={form.hora}
             onChange={(e) => setForm({ ...form, hora: e.target.value })}
-            className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           />
         </label>
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">

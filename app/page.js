@@ -106,6 +106,7 @@ const INITIAL_PLAYERS = [
 const INITIAL_MATCHES = [
   {
     id: 1714316160000,
+    jornada: "1",
     fecha: "2025-04-29",
     hora: "19:30",
     local: "Botafogo",
@@ -116,6 +117,7 @@ const INITIAL_MATCHES = [
   },
   {
     id: 1714316160001,
+    jornada: "1",
     fecha: "2025-04-30",
     hora: "15:00",
     local: "Alejandro Navarrete",
@@ -169,6 +171,7 @@ const INITIAL_MATCHES = [
 const INITIAL_LIGUILLA_MATCHES = [
   {
     id: 2000000000001,
+    jornada: "1",
     fecha: "2025-04-27",
     hora: "14:30",
     local: "Alejandro Navarrete",
@@ -309,7 +312,7 @@ function Sidebar({ activeSection, collapsed, onToggle, onNavigate, associationDe
   ];
 
   return (
-    <aside className={`bg-white dark:bg-slate-900 shadow-xl flex flex-col ${collapsed ? "md:w-20 w-full" : "md:w-60 w-full"}`}>
+    <aside className={`bg-white/50 dark:bg-slate-900/50 backdrop-blur-2xl border-r border-slate-200/50 dark:border-slate-800/50 flex flex-col shadow-2xl transition-all duration-300 ${collapsed ? "md:w-20 w-full" : "md:w-64 w-full"}`}>
       <div className={`flex items-center justify-center p-4 border-b border-slate-200 dark:border-slate-700 ${collapsed ? "px-2" : "px-6"}`}>
         <img
           src={associationDetails.logoUrl}
@@ -326,7 +329,7 @@ function Sidebar({ activeSection, collapsed, onToggle, onNavigate, associationDe
           <button
             key={link.id}
             onClick={() => onNavigate(link.id)}
-            className={`sidebar-link flex items-center w-full gap-3 rounded-xl px-3 py-2 text-sm font-medium ${activeSection === link.id ? "active" : "text-slate-600 hover:text-slate-900 dark:text-slate-300"}`}
+            className={`flex items-center w-full gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${activeSection === link.id ? "bg-sky-600/10 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400 shadow-sm" : "text-slate-600 hover:bg-white/50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-100"}`}
           >
             <span className="inline-block h-2.5 w-2.5 rounded-full bg-sky-500" />
             {!collapsed && <span className="truncate">{link.label}</span>}
@@ -355,7 +358,7 @@ function Sidebar({ activeSection, collapsed, onToggle, onNavigate, associationDe
 
 function Header({ user, darkMode, onToggleDarkMode }) {
   return (
-    <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+    <header className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl border-b border-white/20 dark:border-slate-800/50 sticky top-0 z-30 shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         <div>
           <p className="text-sm text-slate-500 dark:text-slate-400">Bienvenido,</p>
@@ -377,7 +380,7 @@ function LoginScreen({ onLogin, error, associationDetails }) {
   const [password, setPassword] = useState("");
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 dark:bg-slate-950 px-4 py-8">
+    <div className="flex min-h-screen items-center justify-center bg-[#F5F5F7] dark:bg-black px-4 py-8">
       <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-2xl">
         <div className="mb-4 text-center">
           <img
@@ -435,7 +438,7 @@ function sectionTitle(title) {
 
 function ListCard({ title, children }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <div className="rounded-3xl border border-white/40 bg-white/60 backdrop-blur-xl p-5 shadow-xl shadow-slate-200/50 dark:border-slate-800/50 dark:bg-slate-900/60 dark:shadow-none">
       <h3 className="mb-3 text-base font-semibold text-slate-900 dark:text-slate-100">{title}</h3>
       {children}
     </div>
@@ -450,25 +453,26 @@ function InicioSection({ matches }) {
   return (
     <div className="space-y-4">
       {sectionTitle("Próximos Partidos")}
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+      <div className="overflow-hidden rounded-3xl border border-white/50 bg-white/70 backdrop-blur-2xl shadow-2xl shadow-slate-200/40 dark:border-slate-800/50 dark:bg-slate-900/80 dark:shadow-none">
         <table className="min-w-full text-left text-sm text-slate-700 dark:text-slate-300">
           <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-400">
             <tr>
-              { ["Fecha", "Hora", "Local", "Visitante", "División"].map((text) => <th key={text} className="px-3 py-1.5">{text}</th>) }
+              { ["Jornada", "Fecha", "Hora", "Local", "Visitante", "División"].map((text) => <th key={text} className="px-3 py-1.5">{text}</th>) }
             </tr>
           </thead>
           <tbody>
             {upcoming.length > 0 ? upcoming.map((match) => (
               <tr key={match.id} className="border-t border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
+                <td className="px-3 py-2 font-bold">{match.jornada || "-"}</td>
                 <td className="px-3 py-2 font-medium text-slate-900 dark:text-slate-100">{formatDateForDisplay(match.fecha)}</td>
                 <td className="px-3 py-2">{match.hora}</td>
-                <td className="px-3 py-2">{match.local}</td>
+                <td className="px-3 py-2 font-semibold text-sky-700 dark:text-sky-400">{match.local}</td>
                 <td className="px-3 py-2">{match.visitante}</td>
                 <td className="px-3 py-2">{match.division}</td>
               </tr>
             )) : (
               <tr>
-                <td colSpan="5" className="px-4 py-4 text-center text-slate-500 dark:text-slate-400">No hay próximos partidos programados.</td>
+                <td colSpan="6" className="px-4 py-4 text-center text-slate-500 dark:text-slate-400">No hay próximos partidos programados.</td>
               </tr>
             )}
           </tbody>
@@ -607,13 +611,55 @@ function RenderSection({ sectionId, appState, actions }) {
         />
       );
     case "admin-liguilla":
-      return <AdminLiguillaSection clubs={appState.clubs} liguillaGroups={appState.liguillaGroups} onAssignGroup={actions.assignClubToGroup} onRemoveGroup={actions.removeClubFromGroup} onSaveGroups={actions.saveLiguillaGroups} />;
+      return (
+        <AdminLiguillaSection 
+          liguillaMatches={appState.liguillaMatches} 
+          clubs={appState.clubs} 
+          onSaveMatch={actions.saveLiguillaMatch} 
+          onDeleteMatch={actions.deleteLiguillaMatch} 
+          LIGUILLA_GROUPS={LIGUILLA_GROUPS} 
+        />
+      );
     case "suspensiones":
       return <SuspensionesSection players={appState.players} suspensions={appState.suspensions} clubs={appState.clubs} onSaveSuspension={actions.saveSuspension} onDeleteSuspension={actions.deleteSuspension} />;
     case "import-export":
       return <ImportExportSection exportOptions={appState.exportOptions} selectedImportFileName={appState.selectedImportFileName} onImportFileChange={actions.setImportFileName} onImportData={actions.importData} onExportData={actions.exportData} onToggleExportOption={actions.toggleExportOption} />;
     case "admin-usuarios":
-      return <AdminUsuariosSection users={appState.users} onSaveUser={actions.saveUser} onDeleteUser={actions.deleteUser} />;
+      return (
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 px-1">Configuración del Sistema</h2>
+          <div className="flex flex-wrap gap-1.5 rounded-2xl bg-slate-200/50 p-1.5 dark:bg-slate-800/50 backdrop-blur-md w-fit">
+            {[
+              { id: "usuarios", label: "Usuarios" },
+              { id: "campeonatos", label: "Campeonatos" },
+              { id: "clubes", label: "Clubes" },
+              { id: "asociaciones", label: "Asociaciones" },
+              { id: "modelos-division", label: "Modelos de División" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => actions.setActiveAdminTab(tab.id)}
+                className={`rounded-xl px-4 py-1.5 text-sm font-medium transition-all duration-200 ${
+                  appState.activeAdminTab === tab.id
+                    ? "bg-white text-slate-900 shadow-md dark:bg-slate-700 dark:text-white"
+                    : "text-slate-600 hover:bg-white/30 dark:text-slate-400 dark:hover:bg-slate-700/30"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          <div className="mt-4">
+            {appState.activeAdminTab === "usuarios" && (
+              <AdminUsuariosSection users={appState.users} onSaveUser={actions.saveUser} onDeleteUser={actions.deleteUser} />
+            )}
+            {appState.activeAdminTab === "campeonatos" && <div className="p-12 text-center text-slate-400 bg-white/40 dark:bg-slate-900/40 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700">Módulo de Campeonatos en desarrollo</div>}
+            {appState.activeAdminTab === "clubes" && <div className="p-12 text-center text-slate-400 bg-white/40 dark:bg-slate-900/40 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700">Módulo de Clubes en desarrollo</div>}
+            {appState.activeAdminTab === "asociaciones" && <div className="p-12 text-center text-slate-400 bg-white/40 dark:bg-slate-900/40 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700">Módulo de Asociaciones en desarrollo</div>}
+            {appState.activeAdminTab === "modelos-division" && <div className="p-12 text-center text-slate-400 bg-white/40 dark:bg-slate-900/40 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700">Módulo de Modelos de División en desarrollo</div>}
+          </div>
+        </div>
+      );
     default:
       return <InicioSection matches={appState.matches} />;
   }
@@ -678,6 +724,7 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState("inicio");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [darkMode, setDarkMode] = useLocalStorage("darkMode", false);
+  const [activeAdminTab, setActiveAdminTab] = useState("usuarios");
   const [clubs, setClubs] = useState(INITIAL_CLUBS);
   const [players, setPlayers] = useState(INITIAL_PLAYERS);
   const [matches, setMatches] = useState(INITIAL_MATCHES);
@@ -933,7 +980,7 @@ export default function Home() {
   };
 
   return isAuthenticated ? (
-    <div className="flex min-h-screen flex-col md:flex-row bg-slate-100 dark:bg-slate-950">
+    <div className="flex min-h-screen flex-col md:flex-row bg-[#F5F5F7] dark:bg-black transition-colors duration-700">
       <Sidebar
         activeSection={activeSection}
         collapsed={sidebarCollapsed}
@@ -960,6 +1007,7 @@ export default function Home() {
               activeLiguillaGroupTab,
               selectedImportFileName,
               exportOptions,
+              activeAdminTab,
             }}
             actions={{
               saveAssociation,
@@ -986,7 +1034,8 @@ export default function Home() {
               toggleExportOption,
               saveUser,
               deleteUser,
-                updateMatchState,
+              updateMatchState,
+              setActiveAdminTab,
             }}
           />
           </div>

@@ -132,7 +132,7 @@ export default function ClubesSection({
       </Modal>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
         {clubs.map((club) => (
-          <div key={club.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+          <div key={club.id} className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-md p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900 hover:shadow-md transition-shadow">
             <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-2xl font-semibold text-slate-700 overflow-hidden dark:bg-slate-800 dark:text-slate-100">
               {club.logoUrl ? (
                 <img

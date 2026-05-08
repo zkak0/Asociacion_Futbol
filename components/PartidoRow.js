@@ -10,6 +10,7 @@ export default function PartidoRow({ match, onEdit, onDelete, onRegisterResult, 
 
   return (
     <tr className="border-t border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
+      <td className="px-3 py-2 font-bold">{match.jornada || "-"}</td>
       <td className="px-3 py-2 font-medium text-slate-900 dark:text-slate-100">{formatDateForDisplay(match.fecha)}</td>
       <td className="px-3 py-2">{match.hora}</td>
       <td className="px-3 py-2">{match.local}</td>

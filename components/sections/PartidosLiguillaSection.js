@@ -48,7 +48,7 @@ export default function PartidosLiguillaSection({ clubs, matches, activeDivision
         <table className="min-w-full text-left text-[13px] text-slate-700 dark:text-slate-300">
           <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-400">
             <tr>
-              {['Fecha', 'Hora', 'Local', 'Resultado', 'Visitante', 'División', 'Grupo', 'Estado', 'Acciones'].map((text) => (
+              {['Jornada', 'Fecha', 'Hora', 'Local', 'Resultado', 'Visitante', 'División', 'Grupo', 'Estado', 'Acciones'].map((text) => (
                 <th key={text} className="px-2 py-2">{text}</th>
               ))}
             </tr>
@@ -56,6 +56,7 @@ export default function PartidosLiguillaSection({ clubs, matches, activeDivision
           <tbody>
             {divisionMatches.length > 0 ? divisionMatches.map((match) => (
               <tr key={match.id} className="border-t border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
+                <td className="px-3 py-2 font-bold">{match.jornada || "-"}</td>
                 <td className="px-3 py-2 font-medium text-slate-900 dark:text-slate-100">{formatDateForDisplay(match.fecha)}</td>
                 <td className="px-3 py-2">{match.hora}</td>
                 <td className="px-3 py-2">{match.local}</td>
@@ -81,7 +82,7 @@ export default function PartidosLiguillaSection({ clubs, matches, activeDivision
               </tr>
             )) : (
               <tr>
-                <td colSpan="9" className="px-4 py-4 text-center text-slate-500 dark:text-slate-400">No hay partidos de liguilla en esta división.</td>
+                <td colSpan="10" className="px-4 py-4 text-center text-slate-500 dark:text-slate-400">No hay partidos de liguilla en esta división.</td>
               </tr>
             )}
           </tbody>

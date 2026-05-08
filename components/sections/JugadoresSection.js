@@ -170,19 +170,19 @@ export default function JugadoresSection({
       </Modal>
       <div className="grid gap-4">
         <div className="grid gap-3 md:grid-cols-3">
-          <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+          <div className="rounded-2xl border border-slate-200 bg-white/70 backdrop-blur-sm p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <input
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar por nombre o cédula"
-              className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              className="w-full rounded-xl border border-slate-300 bg-white/50 px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             />
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+          <div className="rounded-2xl border border-slate-200 bg-white/70 backdrop-blur-sm p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <select
               value={clubFilter}
               onChange={(e) => setClubFilter(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              className="w-full rounded-xl border border-slate-300 bg-white/50 px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             >
               <option value="">Todos los clubes</option>
               {clubs.map((club) => (
@@ -190,11 +190,11 @@ export default function JugadoresSection({
               ))}
             </select>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+          <div className="rounded-2xl border border-slate-200 bg-white/70 backdrop-blur-sm p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <select
               value={divisionFilter}
               onChange={(e) => setDivisionFilter(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              className="w-full rounded-xl border border-slate-300 bg-white/50 px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             >
               <option value="">Todas las divisiones</option>
               {ALL_DIVISIONES.map((division) => (
@@ -203,7 +203,7 @@ export default function JugadoresSection({
             </select>
           </div>
         </div>
-        <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+        <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-md shadow-sm dark:border-slate-700 dark:bg-slate-900">
           <table className="min-w-full text-left text-[13px] text-slate-700 dark:text-slate-300">
             <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-400">
               <tr>

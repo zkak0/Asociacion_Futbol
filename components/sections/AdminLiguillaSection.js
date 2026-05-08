@@ -19,6 +19,7 @@ export default function AdminLiguillaSection({
       local: "",
       visitante: "",
       grupo: LIGUILLA_GROUPS[0] || "",
+      jornada: "",
       fecha: "",
       golesLocal: 0,
       golesVisitante: 0,
@@ -109,15 +110,25 @@ export default function AdminLiguillaSection({
               </select>
             </label>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Fecha
+              Jornada
               <input
-                value={editingMatch?.fecha || ""}
-                onChange={(e) => setEditingMatch({ ...editingMatch, fecha: e.target.value })}
-                placeholder="DD/MM/AAAA"
+                value={editingMatch?.jornada || ""}
+                onChange={(e) => setEditingMatch({ ...editingMatch, jornada: e.target.value })}
+                placeholder="Ej: 1 o Final"
                 className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
               />
             </label>
           </div>
+
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Fecha
+            <input
+              value={editingMatch?.fecha || ""}
+              onChange={(e) => setEditingMatch({ ...editingMatch, fecha: e.target.value })}
+              placeholder="DD/MM/AAAA"
+              className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            />
+          </label>
 
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
             Estado del Partido
@@ -139,11 +150,11 @@ export default function AdminLiguillaSection({
           </div>
         </form>
       </Modal>
-      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-md shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <table className="min-w-full text-left text-sm text-slate-700 dark:text-slate-300">
           <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-400">
             <tr>
-              {["Fecha", "Partido", "Resultado", "Grupo", "Estado", "Acciones"].map((text) => (
+              {["Jornada", "Fecha", "Partido", "Resultado", "Grupo", "Estado", "Acciones"].map((text) => (
                 <th key={text} className="px-3 py-1.5">{text}</th>
               ))}
             </tr>
@@ -151,6 +162,7 @@ export default function AdminLiguillaSection({
           <tbody>
             {liguillaMatches.length > 0 ? liguillaMatches.map((m) => (
               <tr key={m.id} className="border-t border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
+                <td className="px-3 py-2 font-bold">{m.jornada || "-"}</td>
                 <td className="px-3 py-2">{m.fecha}</td>
                 <td className="px-3 py-2 font-medium">{m.local} vs {m.visitante}</td>
                 <td className="px-3 py-2 font-bold">{m.golesLocal || 0} - {m.golesVisitante || 0}</td>
@@ -163,7 +175,7 @@ export default function AdminLiguillaSection({
               </tr>
             )) : (
               <tr>
-                <td colSpan="6" className="px-4 py-4 text-center text-slate-500 dark:text-slate-400">No hay partidos registrados.</td>
+                <td colSpan="7" className="px-4 py-4 text-center text-slate-500 dark:text-slate-400">No hay partidos registrados.</td>
               </tr>
             )}
           </tbody>
