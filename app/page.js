@@ -281,7 +281,11 @@ function useLocalStorage(key, initialValue) {
     if (typeof window === "undefined") return initialValue;
     try {
       const stored = window.localStorage.getItem(key);
-      return stored ? JSON.parse(stored) : initialValue;
+      if (stored !== null) {
+        return JSON.parse(stored);
+      }
+      // If no value in local storage, check system preference
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
     } catch {
       return initialValue;
     }
