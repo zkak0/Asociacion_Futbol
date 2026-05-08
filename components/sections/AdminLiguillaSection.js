@@ -1,0 +1,181 @@
+"use client";
+
+import React, { useState } from "react";
+import { Modal, ConfirmModal } from "../../components/Modal";
+
+export default function AdminLiguillaSection({
+  liguillaMatches = [],
+  clubs = [],
+  onSaveMatch,
+  onDeleteMatch,
+  LIGUILLA_GROUPS = []
+}) {
+  const [formVisible, setFormVisible] = useState(false);
+  const [editingMatch, setEditingMatch] = useState(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
+  const openForm = (match = null) => {
+    setEditingMatch(match || {
+      local: "",
+      visitante: "",
+      grupo: LIGUILLA_GROUPS[0] || "",
+      fecha: "",
+      golesLocal: 0,
+      golesVisitante: 0,
+      estado: "Programado"
+    });
+    setFormVisible(true);
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    const payload = {
+      ...editingMatch,
+      id: editingMatch?.id || Date.now(),
+      golesLocal: Number(editingMatch.golesLocal || 0),
+      golesVisitante: Number(editingMatch.golesVisitante || 0),
+    };
+    onSaveMatch(payload);
+    setFormVisible(false);
+    setEditingMatch(null);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Administrar Liguilla</h2>
+        <button onClick={() => openForm()} className="rounded-xl bg-sky-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">Nuevo partido</button>
+      </div>
+      <Modal isOpen={formVisible} onClose={() => { setFormVisible(false); setEditingMatch(null); }} title={editingMatch ? "Editar partido de liguilla" : "Nuevo partido de liguilla"}>
+        <form onSubmit={handleSave} className="grid gap-4">
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Equipo Local
+              <select
+                value={editingMatch?.local || ""}
+                onChange={(e) => setEditingMatch({ ...editingMatch, local: e.target.value })}
+                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                required
+              >
+                <option value="">Seleccionar...</option>
+                {clubs.map(c => <option key={c.id} value={c.nombre}>{c.nombre}</option>)}
+              </select>
+            </label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Equipo Visitante
+              <select
+                value={editingMatch?.visitante || ""}
+                onChange={(e) => setEditingMatch({ ...editingMatch, visitante: e.target.value })}
+                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                required
+              >
+                <option value="">Seleccionar...</option>
+                {clubs.map(c => <option key={c.id} value={c.nombre}>{c.nombre}</option>)}
+              </select>
+            </label>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Goles Local
+              <input
+                type="number"
+                value={editingMatch?.golesLocal ?? 0}
+                onChange={(e) => setEditingMatch({ ...editingMatch, golesLocal: e.target.value })}
+                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              />
+            </label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Goles Visitante
+              <input
+                type="number"
+                value={editingMatch?.golesVisitante ?? 0}
+                onChange={(e) => setEditingMatch({ ...editingMatch, golesVisitante: e.target.value })}
+                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              />
+            </label>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Grupo / Fase
+              <select
+                value={editingMatch?.grupo || ""}
+                onChange={(e) => setEditingMatch({ ...editingMatch, grupo: e.target.value })}
+                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              >
+                <option value="">Seleccionar grupo</option>
+                {LIGUILLA_GROUPS.map((g) => <option key={g} value={g}>{g}</option>)}
+              </select>
+            </label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Fecha
+              <input
+                value={editingMatch?.fecha || ""}
+                onChange={(e) => setEditingMatch({ ...editingMatch, fecha: e.target.value })}
+                placeholder="DD/MM/AAAA"
+                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              />
+            </label>
+          </div>
+
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Estado del Partido
+            <select
+              value={editingMatch?.estado || "Programado"}
+              onChange={(e) => setEditingMatch({ ...editingMatch, estado: e.target.value })}
+              className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            >
+              <option value="Programado">Programado</option>
+              <option value="En curso">En curso</option>
+              <option value="Finalizado">Finalizado</option>
+              <option value="Suspendido">Suspendido</option>
+            </select>
+          </label>
+
+          <div className="flex justify-end gap-2 pt-3">
+            <button type="button" onClick={() => { setFormVisible(false); setEditingMatch(null); }} className="rounded-xl bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-300">Cancelar</button>
+            <button className="rounded-xl bg-sky-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">Guardar</button>
+          </div>
+        </form>
+      </Modal>
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+        <table className="min-w-full text-left text-sm text-slate-700 dark:text-slate-300">
+          <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+            <tr>
+              {["Fecha", "Partido", "Resultado", "Grupo", "Estado", "Acciones"].map((text) => (
+                <th key={text} className="px-3 py-1.5">{text}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {liguillaMatches.length > 0 ? liguillaMatches.map((m) => (
+              <tr key={m.id} className="border-t border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
+                <td className="px-3 py-2">{m.fecha}</td>
+                <td className="px-3 py-2 font-medium">{m.local} vs {m.visitante}</td>
+                <td className="px-3 py-2 font-bold">{m.golesLocal || 0} - {m.golesVisitante || 0}</td>
+                <td className="px-3 py-2">{m.grupo}</td>
+                <td className="px-3 py-2">{m.estado}</td>
+                <td className="px-3 py-2 space-x-2">
+                  <button onClick={() => openForm(m)} className="rounded-xl bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">Editar</button>
+                  <button onClick={() => setDeleteConfirmId(m.id)} className="rounded-xl bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 transition hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:hover:bg-rose-800">Eliminar</button>
+                </td>
+              </tr>
+            )) : (
+              <tr>
+                <td colSpan="6" className="px-4 py-4 text-center text-slate-500 dark:text-slate-400">No hay partidos registrados.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <ConfirmModal
+        isOpen={!!deleteConfirmId}
+        onClose={() => setDeleteConfirmId(null)}
+        onConfirm={() => { onDeleteMatch(deleteConfirmId); setDeleteConfirmId(null); }}
+        title="¿Eliminar Partido?"
+        message="¿Estás seguro de que deseas eliminar este partido de liguilla?"
+      />
+    </div>
+  );
+}
