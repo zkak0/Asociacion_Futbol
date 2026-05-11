@@ -178,7 +178,7 @@ export default function SuspensionesSection({
         </form>
       </Modal>
       <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
-        <table className="min-w-full text-left text-sm text-slate-700 dark:text-slate-300">
+        <table className="min-w-full table-fixed text-left text-sm text-slate-700 dark:text-slate-300">
           <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-400">
             <tr>
               {["Jugador", "Club", "División", "Fecha Inicio", "Tipo", "Estado", "Acciones"].map((text) => (

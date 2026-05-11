@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Modal, ConfirmModal } from "../../components/Modal";
 
 export default function AdminLiguillaSection({
@@ -13,6 +13,21 @@ export default function AdminLiguillaSection({
   const [formVisible, setFormVisible] = useState(false);
   const [editingMatch, setEditingMatch] = useState(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
+  const matchesByJornada = useMemo(() => {
+    const groups = {};
+    liguillaMatches.forEach((match) => {
+      const j = match.jornada || "Por programar";
+      if (!groups[j]) groups[j] = [];
+      groups[j].push(match);
+    });
+    return Object.entries(groups).sort((a, b) => {
+      const na = parseInt(a[0]);
+      const nb = parseInt(b[0]);
+      if (!isNaN(na) && !isNaN(nb)) return na - nb;
+      return String(a[0]).localeCompare(String(b[0]));
+    });
+  }, [liguillaMatches]);
 
   const openForm = (match = null) => {
     setEditingMatch(match || {
@@ -150,36 +165,49 @@ export default function AdminLiguillaSection({
           </div>
         </form>
       </Modal>
-      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-md shadow-sm dark:border-slate-700 dark:bg-slate-900">
-        <table className="min-w-full text-left text-sm text-slate-700 dark:text-slate-300">
-          <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-400">
-            <tr>
-              {["Jornada", "Fecha", "Partido", "Resultado", "Grupo", "Estado", "Acciones"].map((text) => (
-                <th key={text} className="px-3 py-1.5">{text}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {liguillaMatches.length > 0 ? liguillaMatches.map((m) => (
-              <tr key={m.id} className="border-t border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
-                <td className="px-3 py-2 font-bold">{m.jornada || "-"}</td>
-                <td className="px-3 py-2">{m.fecha}</td>
-                <td className="px-3 py-2 font-medium">{m.local} vs {m.visitante}</td>
-                <td className="px-3 py-2 font-bold">{m.golesLocal || 0} - {m.golesVisitante || 0}</td>
-                <td className="px-3 py-2">{m.grupo}</td>
-                <td className="px-3 py-2">{m.estado}</td>
-                <td className="px-3 py-2 space-x-2">
-                  <button onClick={() => openForm(m)} className="rounded-xl bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">Editar</button>
-                  <button onClick={() => setDeleteConfirmId(m.id)} className="rounded-xl bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 transition hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:hover:bg-rose-800">Eliminar</button>
-                </td>
-              </tr>
-            )) : (
-              <tr>
-                <td colSpan="7" className="px-4 py-4 text-center text-slate-500 dark:text-slate-400">No hay partidos registrados.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="space-y-6">
+        {matchesByJornada.length > 0 ? (
+          matchesByJornada.map(([jornada, jornadaMatches]) => (
+            <div key={jornada} className="space-y-2">
+              <div className="px-1 flex items-center gap-2">
+                <div className="h-4 w-1 bg-sky-600 rounded-full"></div>
+                <h3 className="font-bold text-slate-800 dark:text-slate-200 text-sm italic">
+                  {jornada === "Por programar" ? jornada : `Jornada ${jornada}`}
+                </h3>
+              </div>
+              <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-md shadow-sm dark:border-slate-700 dark:bg-slate-900">
+                <table className="min-w-full table-fixed text-left text-sm text-slate-700 dark:text-slate-300">
+                  <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                    <tr>
+                      {["Fecha", "Partido", "Resultado", "Grupo", "Estado", "Acciones"].map((text) => (
+                        <th key={text} className="px-3 py-2">{text}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {jornadaMatches.map((m) => (
+                      <tr key={m.id} className="border-t border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">
+                        <td className="px-3 py-2">{m.fecha}</td>
+                        <td className="px-3 py-2 font-medium">{m.local} vs {m.visitante}</td>
+                        <td className="px-3 py-2 font-bold">{m.golesLocal || 0} - {m.golesVisitante || 0}</td>
+                        <td className="px-3 py-2">{m.grupo}</td>
+                        <td className="px-3 py-2">{m.estado}</td>
+                        <td className="px-3 py-2 space-x-2">
+                          <button onClick={() => openForm(m)} className="rounded-xl bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">Editar</button>
+                          <button onClick={() => setDeleteConfirmId(m.id)} className="rounded-xl bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 transition hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:hover:bg-rose-800">Eliminar</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="p-10 text-center text-slate-500 bg-white/50 dark:bg-slate-900/50 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+            No hay partidos registrados.
+          </div>
+        )}
       </div>
       <ConfirmModal
         isOpen={!!deleteConfirmId}

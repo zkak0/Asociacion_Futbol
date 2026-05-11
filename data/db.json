@@ -314,7 +314,9 @@
       "visitante": "Reñaca Bajo",
       "division": "cuarta infantil",
       "resultado": "1-1",
-      "estado": "Finalizado"
+      "estado": "Finalizado",
+      "jornada": "1",
+      "grupo": "A"
     },
     {
       "id": 1714316160001,
@@ -324,7 +326,9 @@
       "visitante": "Tres Estrellas",
       "division": "senior",
       "resultado": "2-1",
-      "estado": "Finalizado"
+      "estado": "Finalizado",
+      "jornada": "1",
+      "grupo": "A"
     },
     {
       "id": 1714402560000,
@@ -334,7 +338,9 @@
       "visitante": "Flecha Verde",
       "division": "tercera adulto",
       "resultado": "0-3",
-      "estado": "Finalizado"
+      "estado": "Finalizado",
+      "jornada": "1",
+      "grupo": "A"
     },
     {
       "id": 1714488960000,
@@ -344,7 +350,9 @@
       "visitante": "Botafogo",
       "division": "segunda infantil",
       "resultado": "",
-      "estado": "Pendiente"
+      "estado": "Pendiente",
+      "jornada": "2",
+      "grupo": "A"
     },
     {
       "id": 1714575360000,
@@ -354,7 +362,9 @@
       "visitante": "Quinto Sector",
       "division": "cuarta infantil",
       "resultado": "",
-      "estado": "Pendiente"
+      "estado": "Pendiente",
+      "jornada": "2",
+      "grupo": "A"
     },
     {
       "id": 1714575360001,
@@ -364,7 +374,9 @@
       "visitante": "Corporacion Everton",
       "division": "senior",
       "resultado": "3-3",
-      "estado": "Finalizado"
+      "estado": "Finalizado",
+      "jornada": "3",
+      "grupo": "A"
     }
   ],
   "liguillaMatches": [

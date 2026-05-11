@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { calculateStandings } from "../lib/standings";
 import StandingsTable from "../components/StandingsTable";
 import PartidoRow from "../components/PartidoRow";
@@ -16,6 +16,24 @@ import SuspensionesSection from "../components/sections/SuspensionesSection";
 import AdminLiguillaSection from "../components/sections/AdminLiguillaSection";
 import AdminUsuariosSection from "../components/sections/AdminUsuariosSection";
 import ClubesSection from "../components/sections/ClubesSection";
+import {
+  HomeIcon,
+  BuildingOfficeIcon,
+  ShieldCheckIcon,
+  UsersIcon,
+  TrophyIcon,
+  TableCellsIcon,
+  CalendarDaysIcon,
+  ClipboardDocumentListIcon,
+  Cog6ToothIcon,
+  NoSymbolIcon,
+  ArrowPathRoundedSquareIcon,
+  ArrowRightOnRectangleIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  SunIcon,
+  MoonIcon,
+} from '@heroicons/react/24/outline';
 import AsociacionSection from "../components/sections/AsociacionSection";
 
 const ALL_DIVISIONES = [
@@ -300,31 +318,46 @@ function useLocalStorage(key, initialValue) {
 }
 
 function Sidebar({ activeSection, collapsed, onToggle, onNavigate, associationDetails }) {
+  const menuIcons = {
+    inicio: HomeIcon,
+    asociacion: BuildingOfficeIcon,
+    clubes: ShieldCheckIcon,
+    jugadores: UsersIcon,
+    campeonato: TrophyIcon,
+    tablas: TableCellsIcon,
+    "partidos-liguilla": CalendarDaysIcon,
+    "tabla-liguilla": ClipboardDocumentListIcon,
+    "admin-liguilla": Cog6ToothIcon,
+    suspensiones: NoSymbolIcon,
+    "import-export": ArrowPathRoundedSquareIcon,
+    "admin-usuarios": UsersIcon, // Using UsersIcon for general admin, could be UserGroupIcon
+  };
+
   const links = [
     { id: "inicio", label: "Inicio" },
     { id: "asociacion", label: "Asociación" },
     { id: "clubes", label: "Clubes" },
     { id: "jugadores", label: "Jugadores" },
     { id: "campeonato", label: "Campeonato" },
-    { id: "tablas", label: "Tablas" },
+    { id: "tablas", label: "Tablas de Posiciones" },
     { id: "partidos-liguilla", label: "Partidos Liguilla" },
-    { id: "tabla-liguilla", label: "Tabla Liguilla" },
+    { id: "tabla-liguilla", label: "Tabla de Liguilla" },
     { id: "admin-liguilla", label: "Admin. Liguilla" },
     { id: "suspensiones", label: "Suspensiones" },
     { id: "import-export", label: "Importar / Exportar" },
-    { id: "admin-usuarios", label: "Administración" },
+    { id: "admin-usuarios", label: "Admin. Usuarios" },
   ];
 
   return (
-    <aside className={`bg-white/50 dark:bg-slate-900/50 backdrop-blur-2xl border-r border-slate-200/50 dark:border-slate-800/50 flex flex-col shadow-2xl transition-all duration-300 ${collapsed ? "md:w-20 w-full" : "md:w-64 w-full"}`}>
+    <aside className={`bg-white/50 dark:bg-slate-900/50 backdrop-blur-2xl border-r border-slate-200/50 dark:border-slate-800/50 flex flex-col shadow-2xl transition-all duration-300 h-screen ${collapsed ? "md:w-20 w-full" : "md:w-64 w-full"}`}>
       <div className={`flex items-center justify-center p-4 border-b border-slate-200 dark:border-slate-700 ${collapsed ? "px-2" : "px-6"}`}>
         <img
           src={associationDetails.logoUrl}
-          alt="Logo Asociación"
+          alt={associationDetails.nombre}
           className={`${collapsed ? "h-10 w-10" : "h-20"} object-contain rounded-lg bg-slate-100 dark:bg-slate-800`}
           onError={(e) => {
             e.currentTarget.onerror = null;
-            e.currentTarget.src = "https://placehold.co/144x144/cccccc/ffffff?text=Logo";
+            e.currentTarget.src = "https://placehold.co/64x64/cccccc/ffffff?text=Logo";
           }}
         />
       </div>
@@ -335,32 +368,28 @@ function Sidebar({ activeSection, collapsed, onToggle, onNavigate, associationDe
             onClick={() => onNavigate(link.id)}
             className={`flex items-center w-full gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${activeSection === link.id ? "bg-sky-600/10 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400 shadow-sm" : "text-slate-600 hover:bg-white/50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-100"}`}
           >
-            <span className="inline-block h-2.5 w-2.5 rounded-full bg-sky-500" />
+            {menuIcons[link.id] && React.createElement(menuIcons[link.id], { className: "h-5 w-5" })}
+            {!menuIcons[link.id] && <span className="inline-block h-2.5 w-2.5 rounded-full bg-sky-500" />}
             {!collapsed && <span className="truncate">{link.label}</span>}
+            {collapsed && <span className="sr-only">{link.label}</span>}
           </button>
         ))}
       </nav>
-      <div className="p-3 border-t border-slate-200 dark:border-slate-700">
-        <button
-          onClick={onToggle}
-          className="w-full rounded-xl bg-slate-100 dark:bg-slate-800 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
-        >
-          {collapsed ? "Expandir" : "Colapsar"}
-        </button>
-      </div>
-      <div className="p-3 border-t border-slate-200 dark:border-slate-700">
-        <button
-          onClick={() => onNavigate("logout")}
-          className="w-full rounded-xl bg-rose-100 dark:bg-rose-900/30 px-3 py-2 text-sm font-medium text-rose-700 dark:text-rose-200 hover:bg-rose-200 dark:hover:bg-rose-800"
-        >
-          Cerrar sesión
-        </button>
+      <div className="p-3">
+        <div className="flex justify-center">
+          <button
+            onClick={onToggle}
+            className="rounded-xl bg-slate-100 dark:bg-slate-800 p-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
+          > {collapsed ? <ChevronRightIcon className="h-5 w-5" /> : <ChevronLeftIcon className="h-5 w-5" />}
+          <span className="sr-only">{collapsed ? "Expandir" : "Colapsar"}</span>
+          </button>
+        </div>
       </div>
     </aside>
   );
 }
 
-function Header({ user, darkMode, onToggleDarkMode }) {
+function Header({ user, darkMode, onToggleDarkMode, onLogout }) {
   return (
     <header className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl border-b border-white/20 dark:border-slate-800/50 sticky top-0 z-30 shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
@@ -368,12 +397,22 @@ function Header({ user, darkMode, onToggleDarkMode }) {
           <p className="text-sm text-slate-500 dark:text-slate-400">Bienvenido,</p>
           <p className="text-base font-semibold text-slate-900 dark:text-slate-100">{user?.nombre || "Usuario"}</p>
         </div>
-        <button
-          onClick={onToggleDarkMode}
-          className="rounded-xl bg-slate-100 dark:bg-slate-800 px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
-        >
-          {darkMode ? "Modo Claro" : "Modo Oscuro"}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onLogout}
+            className="rounded-xl bg-rose-100 dark:bg-rose-900/30 p-2 text-sm font-medium text-rose-700 dark:text-rose-200 hover:bg-rose-200 dark:hover:bg-rose-800"
+          >
+            <ArrowRightOnRectangleIcon className="h-5 w-5" />
+            <span className="sr-only">Cerrar sesión</span>
+          </button>
+          <button
+            onClick={onToggleDarkMode}
+            className="rounded-xl bg-slate-100 dark:bg-slate-800 p-2 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
+          >
+            {darkMode ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
+            <span className="sr-only">{darkMode ? "Modo Claro" : "Modo Oscuro"}</span>
+          </button>
+        </div>
       </div>
     </header>
   );
@@ -458,7 +497,7 @@ function InicioSection({ matches }) {
     <div className="space-y-4">
       {sectionTitle("Próximos Partidos")}
       <div className="overflow-hidden rounded-3xl border border-white/50 bg-white/70 backdrop-blur-2xl shadow-2xl shadow-slate-200/40 dark:border-slate-800/50 dark:bg-slate-900/80 dark:shadow-none">
-        <table className="min-w-full text-left text-sm text-slate-700 dark:text-slate-300">
+        <table className="min-w-full table-fixed text-left text-sm text-slate-700 dark:text-slate-300">
           <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-400">
             <tr>
               { ["Jornada", "Fecha", "Hora", "Local", "Visitante", "División"].map((text) => <th key={text} className="px-3 py-1.5">{text}</th>) }
@@ -993,7 +1032,7 @@ export default function Home() {
         associationDetails={associationDetails}
       />
       <div className="flex flex-1 flex-col overflow-hidden">
-        <Header user={currentUser} darkMode={darkMode} onToggleDarkMode={() => setDarkMode((prev) => !prev)} />
+        <Header user={currentUser} darkMode={darkMode} onToggleDarkMode={() => setDarkMode((prev) => !prev)} onLogout={handleLogout} />
         <main className="flex-1 overflow-y-auto px-4 py-4 md:px-6 md:py-4">
           <div className="mx-auto w-full max-w-7xl space-y-4">
             <RenderSection

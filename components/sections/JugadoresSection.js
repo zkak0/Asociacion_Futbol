@@ -204,11 +204,11 @@ export default function JugadoresSection({
           </div>
         </div>
         <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-md shadow-sm dark:border-slate-700 dark:bg-slate-900">
-          <table className="min-w-full text-left text-[13px] text-slate-700 dark:text-slate-300">
+          <table className="min-w-full table-fixed text-left text-[13px] text-slate-700 dark:text-slate-300">
             <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-400">
               <tr>
                 {["Nombres", "Apellidos", "Cédula", "Club", "División", "Fecha Nac.", "Estado", "Acciones"].map((text) => (
-                  <th key={text} className="px-2 py-2">{text}</th>
+                  <th key={text} className="px-3 py-2">{text}</th>
                 ))}
               </tr>
             </thead>
