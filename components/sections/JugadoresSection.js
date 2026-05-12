@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { Modal, ConfirmModal } from "../../components/Modal";
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { formatDateForDisplay, formatDateForInput } from "../../lib/utils";
 
 export default function JugadoresSection({
@@ -223,17 +224,13 @@ export default function JugadoresSection({
                   <td className="px-3 py-2">{formatDateForDisplay(player.fechaNac)}</td>
                   <td className="px-3 py-2">{player.estado}</td>
                   <td className="px-3 py-2 space-x-2">
-                    <button
-                      onClick={() => setEditingPlayer(player)}
-                      className="rounded-xl bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                    >
-                      Editar
+                    <button onClick={() => setEditingPlayer(player)} className="rounded-xl bg-slate-100 p-2 text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                      <PencilIcon className="h-4 w-4" />
+                      <span className="sr-only">Editar</span>
                     </button>
-                    <button
-                      onClick={() => setDeleteConfirmId(player.id)}
-                      className="rounded-xl bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 transition hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:hover:bg-rose-800"
-                    >
-                      Eliminar
+                    <button onClick={() => setDeleteConfirmId(player.id)} className="rounded-xl bg-rose-100 p-2 text-rose-700 transition hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:hover:bg-rose-800">
+                      <TrashIcon className="h-4 w-4" />
+                      <span className="sr-only">Eliminar</span>
                     </button>
                   </td>
                 </tr>

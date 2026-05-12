@@ -1,8 +1,46 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Modal, ConfirmModal } from "../../components/Modal";
 import { formatDateForDisplay, formatDateForInput } from "../../lib/utils";
+import { ALL_DIVISIONES as DEFAULT_DIVISIONES, SUSPENSION_TYPES, TIEMPO_UNITS as DEFAULT_TIEMPO_UNITS } from "../../lib/constants";
+
+function parseDateValue(value) {
+  if (!value) return null;
+  const parts = value.includes("/") ? value.split("/") : value.split("-");
+  if (parts.length !== 3) return null;
+  const [day, month, year] = parts.map((part) => part.trim());
+  const parsed = new Date(`${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function calculateEndDate(fechaInicio, valor, unidad) {
+  const date = parseDateValue(fechaInicio);
+  if (!date || !valor || Number.isNaN(Number(valor))) return "";
+  const amount = Number(valor);
+  if (amount <= 0) return "";
+  switch (unidad) {
+    case "días":
+      date.setDate(date.getDate() + amount);
+      break;
+    case "semanas":
+      date.setDate(date.getDate() + amount * 7);
+      break;
+    case "meses":
+      date.setMonth(date.getMonth() + amount);
+      break;
+    case "años":
+      date.setFullYear(date.getFullYear() + amount);
+      break;
+    default:
+      break;
+  }
+  const day = `${date.getDate()}`.padStart(2, "0");
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
 
 export default function SuspensionesSection({ 
   players = [], 
@@ -10,8 +48,8 @@ export default function SuspensionesSection({
   clubs = [], 
   onSaveSuspension, 
   onDeleteSuspension, 
-  ALL_DIVISIONES = [], 
-  TIEMPO_UNITS = [] 
+  ALL_DIVISIONES = DEFAULT_DIVISIONES, 
+  TIEMPO_UNITS = DEFAULT_TIEMPO_UNITS 
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterClub, setFilterClub] = useState("");
@@ -39,10 +77,13 @@ export default function SuspensionesSection({
     return matchesSearch && matchesClub && matchesStatus;
   });
 
+  const selectedPlayer = players.find((player) => player.id === form.playerId);
+  const selectedPlayerName = selectedPlayer ? `${selectedPlayer.nombres} ${selectedPlayer.apellidos}` : "";
+  const query = form.playerName.toLowerCase();
   const suggestions = players.filter((player) => {
-    const query = form.playerName.toLowerCase();
     return query.length > 1 && (`${player.nombres} ${player.apellidos}`.toLowerCase().includes(query) || player.cedula.includes(query));
   });
+  const showSuggestions = query.length > 1 && (!form.playerId || form.playerName !== selectedPlayerName);
 
   const openForm = (suspension = null) => {
     if (suspension) {
@@ -85,6 +126,7 @@ export default function SuspensionesSection({
       fechaInicio: formatDateForInput(form.fechaInicio),
       duracionFechas: form.tipo === "fechas" ? Number(form.duracionFechas) : undefined,
       duracionTiempo: form.tipo === "tiempo" ? { valor: Number(form.duracionTiempoValor), unidad: form.duracionTiempoUnidad } : undefined,
+      fechaTerminoCalculada: form.tipo === "tiempo" ? calculateEndDate(form.fechaInicio, form.duracionTiempoValor, form.duracionTiempoUnidad) : undefined,
       id: editingSuspension?.id || Date.now(),
       estado: editingSuspension?.estado || "Activa",
     };
@@ -133,7 +175,7 @@ export default function SuspensionesSection({
       </div>
       <Modal isOpen={formVisible} onClose={() => { setFormVisible(false); setEditingSuspension(null); }} title={editingSuspension ? "Editar Suspensión" : "Nueva Suspensión"}>
         <form onSubmit={handleSave} className="grid gap-3 lg:grid-cols-2">
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          <label className="relative block text-sm font-medium text-slate-700 dark:text-slate-300">
             Jugador
             <input
               value={form.playerName}
@@ -141,7 +183,7 @@ export default function SuspensionesSection({
               placeholder="Buscar nombre o cédula"
               className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             />
-            {suggestions.length > 0 && (
+            {showSuggestions && suggestions.length > 0 && (
               <div className="suggestions-list">
                 {suggestions.slice(0, 5).map((player) => (
                   <div
@@ -161,6 +203,7 @@ export default function SuspensionesSection({
               </div>
             )}
           </label>
+
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
             División
             <select
@@ -174,7 +217,95 @@ export default function SuspensionesSection({
               ))}
             </select>
           </label>
-          {/* other fields omitted for brevity */}
+
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Fecha Inicio
+            <input
+              value={form.fechaInicio}
+              onChange={(e) => setForm({ ...form, fechaInicio: e.target.value })}
+              placeholder="DD-MM-AAAA"
+              className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            />
+          </label>
+
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Tipo Suspensión
+            <select
+              value={form.tipo}
+              onChange={(e) => setForm({ ...form, tipo: e.target.value })}
+              className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            >
+              {SUSPENSION_TYPES.map((tipo) => (
+                <option key={tipo} value={tipo}>{tipo === "fechas" ? "Fechas" : "Tiempo"}</option>
+              ))}
+            </select>
+          </label>
+
+          {form.tipo === "fechas" ? (
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              N° Fechas
+              <input
+                value={form.duracionFechas}
+                onChange={(e) => setForm({ ...form, duracionFechas: e.target.value })}
+                placeholder="Cantidad de fechas"
+                type="number"
+                min="1"
+                className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              />
+            </label>
+          ) : (
+            <>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                Duración
+                <input
+                  value={form.duracionTiempoValor}
+                  onChange={(e) => setForm({ ...form, duracionTiempoValor: e.target.value })}
+                  placeholder="Cantidad"
+                  type="number"
+                  min="1"
+                  className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                />
+              </label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                Unidad
+                <select
+                  value={form.duracionTiempoUnidad}
+                  onChange={(e) => setForm({ ...form, duracionTiempoUnidad: e.target.value })}
+                  className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                >
+                  {TIEMPO_UNITS.map((unidad) => (
+                    <option key={unidad} value={unidad}>{unidad}</option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  Fecha de término calculada: {calculateEndDate(form.fechaInicio, form.duracionTiempoValor, form.duracionTiempoUnidad) || "(ingrese datos válidos)"}
+                </p>
+              </label>
+            </>
+          )}
+
+          <label className="lg:col-span-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Motivo
+            <textarea
+              value={form.motivo}
+              onChange={(e) => setForm({ ...form, motivo: e.target.value })}
+              rows={4}
+              className="mt-1.5 w-full rounded-2xl border border-slate-300 bg-slate-50 px-3 py-2 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            />
+          </label>
+
+          <div className="lg:col-span-2 flex flex-wrap gap-3 justify-end pt-3">
+            <button
+              type="button"
+              onClick={() => { setFormVisible(false); setEditingSuspension(null); }}
+              className="rounded-xl bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            >
+              Cancelar
+            </button>
+            <button className="rounded-xl bg-sky-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">
+              Guardar
+            </button>
+          </div>
         </form>
       </Modal>
       <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
@@ -196,8 +327,14 @@ export default function SuspensionesSection({
                 <td className="px-3 py-2">{s.tipo}</td>
                 <td className="px-3 py-2">{s.estado}</td>
                 <td className="px-3 py-2 space-x-2">
-                  <button onClick={() => openForm(s)} className="rounded-xl bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">Editar</button>
-                  <button onClick={() => setDeleteConfirmId(s.id)} className="rounded-xl bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 transition hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:hover:bg-rose-800">Eliminar</button>
+                  <button onClick={() => openForm(s)} className="rounded-xl bg-slate-100 p-2 text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                    <PencilIcon className="h-4 w-4" />
+                    <span className="sr-only">Editar</span>
+                  </button>
+                  <button onClick={() => setDeleteConfirmId(s.id)} className="rounded-xl bg-rose-100 p-2 text-rose-700 transition hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:hover:bg-rose-800">
+                    <TrashIcon className="h-4 w-4" />
+                    <span className="sr-only">Eliminar</span>
+                  </button>
                 </td>
               </tr>
             )) : (

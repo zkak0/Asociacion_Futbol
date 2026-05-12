@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import PartidoForm from "../../components/PartidoForm";
 import { Modal, ConfirmModal } from "../../components/Modal";
+import { CheckIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { formatDateForDisplay } from "../../lib/utils";
 
 export default function CampeonatoSection({ clubs, matches, onSaveMatch, onDeleteMatch, onRegisterResult, onChangeMatchState, ALL_DIVISIONES, LIGUILLA_GROUPS }) {
@@ -126,9 +127,18 @@ export default function CampeonatoSection({ clubs, matches, onSaveMatch, onDelet
                           </select>
                         </td>
                         <td className="px-3 py-2 space-x-1 text-right">
-                          <button onClick={() => handleRegisterClick(match.id, match.resultado)} className="rounded-xl bg-sky-100 px-2 py-1 text-xs font-semibold text-sky-700 transition hover:bg-sky-200 dark:bg-sky-900/30 dark:text-sky-200 dark:hover:bg-sky-800">Registrar</button>
-                          <button onClick={() => { setEditingMatch(match); setFormOpen(true); }} className="rounded-xl bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">Editar</button>
-                          <button onClick={() => setDeleteConfirmId(match.id)} className="rounded-xl bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 transition hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:hover:bg-rose-800">Eliminar</button>
+                          <button onClick={() => handleRegisterClick(match.id, match.resultado)} className="rounded-xl bg-sky-100 p-2 text-sky-700 transition hover:bg-sky-200 dark:bg-sky-900/30 dark:text-sky-200 dark:hover:bg-sky-800">
+                            <CheckIcon className="h-4 w-4" />
+                            <span className="sr-only">Registrar</span>
+                          </button>
+                          <button onClick={() => { setEditingMatch(match); setFormOpen(true); }} className="rounded-xl bg-slate-100 p-2 text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                            <PencilIcon className="h-4 w-4" />
+                            <span className="sr-only">Editar</span>
+                          </button>
+                          <button onClick={() => setDeleteConfirmId(match.id)} className="rounded-xl bg-rose-100 p-2 text-rose-700 transition hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:hover:bg-rose-800">
+                            <TrashIcon className="h-4 w-4" />
+                            <span className="sr-only">Eliminar</span>
+                          </button>
                         </td>
                       </tr>
                     ))}

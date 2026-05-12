@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Modal, ConfirmModal } from "../../components/Modal";
 
 export default function AdminUsuariosSection({ users, onSaveUser, onDeleteUser, USER_ROLES, MASTER_ADMIN_ID }) {
@@ -123,17 +124,13 @@ export default function AdminUsuariosSection({ users, onSaveUser, onDeleteUser, 
                 <td className="px-3 py-2">{user.cedula}</td>
                 <td className="px-3 py-2">{user.rol}</td>
                 <td className="px-3 py-2 space-x-2">
-                  <button
-                    onClick={() => setEditingUser(user)}
-                    className="rounded-xl bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                  >
-                    Editar
+                  <button onClick={() => setEditingUser(user)} className="rounded-xl bg-slate-100 p-2 text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                    <PencilIcon className="h-4 w-4" />
+                    <span className="sr-only">Editar</span>
                   </button>
-                  <button
-                    onClick={() => setDeleteConfirmId(user.id)}
-                    className="rounded-xl bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700 transition hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:hover:bg-rose-800"
-                  >
-                    Eliminar
+                  <button onClick={() => setDeleteConfirmId(user.id)} className="rounded-xl bg-rose-100 p-2 text-rose-700 transition hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:hover:bg-rose-800">
+                    <TrashIcon className="h-4 w-4" />
+                    <span className="sr-only">Eliminar</span>
                   </button>
                 </td>
               </tr>
