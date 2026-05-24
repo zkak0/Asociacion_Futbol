@@ -49,27 +49,25 @@ export default function TablaLiguillaSection({ clubs, matches, groups, activeGro
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Tabla Liguilla</h2>
         <div className="flex flex-wrap gap-2">
-          {LIGUILLA_GROUPS.map((group) => (
-            <button
-              key={group}
-              onClick={() => onChangeGroup(group)}
-              className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${activeGroup === group ? "bg-sky-600 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"}`}
-            >
-              Grupo {group}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {ALL_DIVISIONES.map((division) => (
-          <button
-            key={division}
-            onClick={() => onChangeDivision(division)}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${activeDivision === division ? "bg-sky-600 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"}`}
+          <select
+            value={activeGroup}
+            onChange={(e) => onChangeGroup(e.target.value)}
+            className="rounded-xl px-3 py-2 text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
           >
-            {division}
-          </button>
-        ))}
+            {LIGUILLA_GROUPS.map((group) => (
+              <option key={group} value={group}>Grupo {group}</option>
+            ))}
+          </select>
+          <select
+            value={activeDivision}
+            onChange={(e) => onChangeDivision(e.target.value)}
+            className="rounded-xl px-3 py-2 text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+          >
+            {ALL_DIVISIONES.map((division) => (
+              <option key={division} value={division}>{division}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <StandingsTable standings={standings} title={`Tabla Liguilla - Grupo ${activeGroup} - ${activeDivision}`} />
     </div>

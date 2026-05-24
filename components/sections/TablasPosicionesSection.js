@@ -17,17 +17,20 @@ export default function TablasPosicionesSection({ clubs, matches, ALL_DIVISIONES
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Tablas de Posiciones</h2>
-      <div className="flex flex-wrap gap-2">
-        {['General', ...ALL_DIVISIONES].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${activeTab === tab ? "bg-sky-600 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"}`}
+        <div className="mb-4">
+          <select
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="rounded-xl px-3 py-2 text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
           >
-            {tab}
-          </button>
-        ))}
-      </div>
+            <option value="General">General</option>
+            {ALL_DIVISIONES.map((division) => (
+              <option key={division} value={division}>
+                {division}
+              </option>
+            ))}
+          </select>
+        </div>
       <StandingsTable standings={currentStandings} title={`Tabla de Posiciones - ${activeTab}`} />
     </div>
   );
